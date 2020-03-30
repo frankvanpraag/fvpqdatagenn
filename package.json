@@ -7,7 +7,7 @@
   },
   "main": "server.js",
   "scripts": {
-    "start": "npm node start",
+    "start": "node server.js",
     "web": "node server.js"
   },
   "author": "Joseph Bernisky",
