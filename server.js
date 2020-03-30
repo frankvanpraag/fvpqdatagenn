@@ -58,14 +58,13 @@ var got = require('got');
 var path = require('path');
 const detectCharacterEncoding = require('detect-character-encoding');
 var bodyParser = require('body-parser');
-var { Curl } = require('node-libcurl');
 var format = require('date-format');
 const { Parser } = require('json2csv');
 const csv = require('csv')
 // const csv = require('fast-csv');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const utf8 = require('utf8');
-var curl = new Curl();
+// var curl = new Curl();
 var app = express();
 var jsonParser = bodyParser.json()
 app.use(bodyParser.urlencoded({
