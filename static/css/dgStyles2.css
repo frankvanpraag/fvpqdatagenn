@@ -1,0 +1,108 @@
+body{font-family:Arial,Helvetica,sans-serif;font-size:small;vertical-align:top; padding-top: 30px;}
+a{color:#000}
+.hide{display:none}
+.sliderLabel{margin-top:10px}
+.slider{margin-top:10px}
+.sliderLeftLabel{font-size:.8em}
+.sliderRightLabel{font-size:.8em}
+.sliderLabelMaxValue{font-size:1em;margin-left:5px;margin-right:5px}
+.jsgrid-grid-body,.jsgrid-grid-header{overflow:auto;font-size:11px;vertical-align:top}
+.jsgrid-cell{vertical-align:top;word-wrap:break-word}
+.cssRadioButtonOptionLabel{margin:10px}
+.cssTextInput{margin:10px}
+.cssAnswerGroupContainer{display:table;border:0}
+.cssQandAnswerChoiceContainer{display:block}
+.textInputSmall{width:24px;text-align:center}
+.textInputDatacenter{width:30px;text-align:center}
+.surveyList{border:0 solid #73ad21;padding:10px;vertical-align:top;float:left}
+.surveyQuestionList{border:0 solid #39f;padding:10px;vertical-align:top;width:600px;position:relative;z-index:1000}
+.surveyList{border:0 solid #39f;padding:10px;vertical-align:top;width:600px;position:relative;z-index:1000}
+.surveyList{border:0 solid #39f;padding:10px;vertical-align:top;width:600px;position:relative}
+.divUserControlPanel{background-color:rgba(233,233,233);padding:10px}
+.divTextCommentOptions{background-color:rgba(233,233,233);padding:10px}
+.divHeaderPanel{background-color:rgba(233,233,233);padding:10px}
+body.waiting *{cursor:progress}
+table,th{border:0 solid #000;vertical-align:top;overflow-y:hidden;overflow-x:hidden}
+table{width:100%}
+.loading{opacity:50%}
+.advancedOptionsButton{vertical-align:top;opacity:1;width:75px;z-index:1000;text-align:center;font-size:10px}
+.currentSurveyNameLabel{font-weight:700;color:#0007c7}
+.randomComments{position:absolute;float:right}
+.mediumDropdown{width:300px}
+.smallDropdown{width:200px}
+.topRightPanel{border:0 solid #ff33b1;padding:20px 5px 20px 20px;vertical-align:top;z-index:101;font-size:.8em;height:350px;max-height:350px;overflow-y:scroll;overflow-x:hidden;display:table-cell;width:100%;float:right;position:relative}
+.myMatrixCanvasStyle{position:absolute;top:0;left:0;z-index:100;overflow-y:scroll;overflow-x:hidden;display:table-cell}
+#btnGenerateResponses{margin-left:25px;vertical-align:top;opacity:1;width:150px;z-index:1000;text-align:center;font-size:12px;background-color:rgba(0,159,64,.119)}
+#trimButtons{border:1px solid #f93e3e1f;vertical-align:bottom;height:20px;display:table-cell;padding:10px;width:100%}
+.introjs-floating{min-width:100%;max-width:100%}
+.introjs-tooltip{max-width:100%;min-width:500px}
+.introjs-helperNumberLayer{background:#39f;left:-5px}
+.apiTokenContainer{width:300px;position:relative;width:300px;text-align:center}
+.apiTokenContainer,.apiTokenMask{width:300px;height:1em;text-align:center;position:relative;top:0;left:0}
+.apiTokenMask{z-index:1000000;background-color:#fff}
+.textInputAPITokenInput{width:300px;text-align:center}
+#tblControlPanelforSurvey,
+#tblControlPanelforTextComments,
+#tblControlPanelforTickets,
+#tblSettings,
+#tblSurveyList,
+#tblSurveyQuestions {
+   
+}
+#tblSurveyQuestions{z-index:70;width:600px;}
+#tblControlPanelforTickets{z-index:60;width:600px; height:600px;}
+#tblControlPanelforTextComments{z-index:50;width:600px; height:600px;}
+#tblControlPanelforSurvey{z-index:40;width:600px; height:600px;}
+#tblSurveyList{z-index:30;width:600px; height:600px;}
+#tblSettings{z-index:20;width:600px; height:600px;}
+/* #tabContainer{width:2400px;display:flex;justify-content:space-around} */
+
+.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+.pace-inactive{display:none}
+.pace .pace-progress{background:#29d;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}
+.pace .pace-progress-inner{display:block;position:absolute;right:0;width:100px;height:100%;box-shadow:0 0 10px #29d,0 0 5px #29d;opacity:1;-webkit-transform:rotate(3deg) translate(0,-4px);-moz-transform:rotate(3deg) translate(0,-4px);-ms-transform:rotate(3deg) translate(0,-4px);-o-transform:rotate(3deg) translate(0,-4px);transform:rotate(3deg) translate(0,-4px)}
+.pace .pace-activity{display:block;position:fixed;z-index:2000;top:15px;right:15px;width:14px;height:14px;border:solid 2px transparent;border-top-color:#29d;border-left-color:#29d;border-radius:10px;-webkit-animation:pace-spinner .4s linear infinite;-moz-animation:pace-spinner .4s linear infinite;-ms-animation:pace-spinner .4s linear infinite;-o-animation:pace-spinner .4s linear infinite;animation:pace-spinner .4s linear infinite}
+@-webkit-keyframes pace-spinner{
+0%{-webkit-transform:rotate(0);transform:rotate(0)}
+100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@-moz-keyframes pace-spinner{
+0%{-moz-transform:rotate(0);transform:rotate(0)}
+100%{-moz-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@-o-keyframes pace-spinner{
+0%{-o-transform:rotate(0);transform:rotate(0)}
+100%{-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@-ms-keyframes pace-spinner{
+0%{-ms-transform:rotate(0);transform:rotate(0)}
+100%{-ms-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@keyframes pace-spinner{
+0%{transform:rotate(0);transform:rotate(0)}
+100%{transform:rotate(360deg);transform:rotate(360deg)}
+}
+
+
+a, a:active .slimMenuCustom {
+    text-decoration: none;
+}
+
+ul.slimMenuCustom li a {
+padding: 10px 20px 10px 20px;}
+
+.slimMenuCustom {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 99999999999999;
+}
+.menuContainer{
+   position: fixed;
+   left: 0;
+   top: 0;
+   width: 100%;
+   text-align: center;
+}

@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+    <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        gapi.load('auth2', function () {});
+
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WP7F48V');
+
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Data Generator</title>
+    <link rel="shortcut icon" href="#">
+    <script src="/static/js/pace.js" type="text/javascript"></script>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
+    <script type="text/javascript" src="/static/js/jquery.slimmenu.js"></script>
+    <link type="text/css" rel="stylesheet" href="/static/css/slimMenu.css" />
+    <script src="/static/js/dataGenerator2.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/intro.js" type="text/javascript"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.9.3/introjs.css" />
+    <!-- <link type="text/css" rel="stylesheet" href="/static/css/loaders.css" /> -->
+    <link type="text/css" rel="stylesheet" href="/static/css/dgStyles2.css" />
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WP7F48V" height="0" width="0"
+                style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <div class="menuContainer">
+        <ul class="slimmenu slimMenuCustom">
+            <li>
+                <a href="#">API Token</a>
+            </li>
+            <li>
+                <a href="#">Surveys</a>
+            </li>
+            <li>
+                <a href="#">Options</a>
+            </li>
+            <li>
+                <a href="#">Questions</a>
+            </li>
+            <li>
+                <a href="#">Results</a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="cbp-content" id="tblSettings">
+        <div id="divHeaderPanel" class="divHeaderPanel">
+            <br />
+            <span id="tourStop001">
+                Your API Token: <span class="apiTokenContainer">
+                    <span class="apiTokenMask"><input type="text" id="txtAPIToken" class="textInputAPITokenInput"></span>
+                </span></input>
+                <button id="btnToggleAPITokenVisibility">show</button>
+                Your Datacenter: <input type="text" id="txtDatacenter" class="textInputDatacenter"></input>
+                <button id="btnSaveUserInfo">&#x2713;</button></span>&nbsp;&nbsp;&nbsp;
+        </div>
+
+        <button id="btnToggleDevMode" class="advancedOptionsButton">Advanced</button>
+        <button id="btnStartTutorial">Tutorial</button>
+        <div id="introMessagePanel" class="topRightPanel"><canvas id="d" class="myMatrixCanvasStyle tourStop010"></canvas>
+        </div>
+        <div id="secretDevStuff" class="tooltip">
+            turbo mode will press the "Generate Responses" button over and over again<br /><br />
+            # of times to press generate button:
+            <input type="text" id="txtNumberOfTurboCycles" class="textInputSmall"></input>
+            every
+            <input type="text" id="txtSecondsBetweenTurboCycles" class="textInputSmall"></input>
+            seconds to create <label id="lblTurboModeResponseCount"></label>&nbsp;responses&nbsp;
+            <br /><br />
+            <button id="btnStartTurboMode">start turbo mode</button>&nbsp;
+
+            <label id="lblTurboModeStatus"></label>
+            <label id="lblTurboModeCycleNumber"></label>
+            <br />
+        </div>
+    </div>
+
+
+    <div id="contentContainer">
+        <div id="tblControlPanelforTextComments" class="cbp-content">
+            <span id="tourStop006">
+                <div id="divUserControlPanel3" class="divUserControlPanel">
+                    <input type="checkbox" id="chkIncludeTextResponses" /> Create Text Comments
+                </div>
+
+                <div id="divTextCommentOptions" class="divTextCommentOptions" style="display:none;">
+                    Your Google Sheet ID: <input type="text" id="txtGSheetID" class="textInputAPITokenInput"
+                           value="1gXvHT5qSdyxl_Pf0bVU2TkxZQL32TizQz_Ws2plASWM"></input>
+                    <button id="btnSaveUserTextInfo">&#x2713;</button>&nbsp;&nbsp;<a id="linkToSpreadsheet" href="http://google.com"
+                       target="top">Open
+                        Spreadsheet</a>
+                    <br /><br />
+                    <select name="selectTextCommentLibraryList" id="selectTextCommentLibraryList" class="mediumDropdown" disabled=disabled>
+
+                    </select><br /><br />
+
+                    <select name="selectTextCommentTargetQuestion" id="selectTextCommentTargetQuestion" class="mediumDropdown"
+                            disabled=true>
+                        <option disabled selected>Select a Question to Base Sentiment On</option>
+                    </select>
+                </div>
+            </span>
+
+            <div id="divUserControlPanel2" class="divUserControlPanel tourStop007">
+                <input type="checkbox" id="chkIncludeTickets1" /> Create Tickets
+                <br /><br />
+                <div id="divTicketOptions" class="divTicketOptions" style="display:none;">
+                    <input type="text" id="txtTicketPercentage1" value="5" class="textInputSmall" disabled=true></input>
+                    % of responses
+                    <br /><br />
+                    Select which question to base the ticket score on: &nbsp;&nbsp;
+                    <select id="selectTicketTargetQuestion1" class="mediumDropdown" disabled=true>
+                        <option disabled selected>Select a Question </option>
+                    </select>
+
+                    <br /><br />
+                    JSON Endpoint URL:&nbsp;&nbsp; <input type="text" id="txtJSONURL1" class="textInputAPITokenInput" disabled=true></input>
+                    <button id="btnSaveJSONEndpoint1" disabled=true>&#x2713;</button>
+                </div>
+            </div>
+
+            <div id="divUserControlPanel1" class="divUserControlPanel">
+
+                <span id="tourStop003">
+                    <label id="lblCurrentSurveyName" class="currentSurveyNameLabel">#Survey Name#</label>
+                </span>
+                <br /><br />
+                <span id="tourStop004">
+                    Start Date: <input type="text" id="txtStartDate" autocomplete="off"></input>&nbsp;
+                    End Date: <input type="text" id="txtEndDate" autocomplete="off"></input>&nbsp;
+                </span>
+                <br /><br />
+                <span id="tourStop005">
+                    # of Responses to Generate: <input type="text" id="txtNumberOfResponses" value="1"
+                           class="textInputSmall"></input></span>&nbsp;
+                <button id="btnGenerateResponses" class="tourStop009">Generate Responses</button>
+            </div>
+
+        </div>
+
+
+
+        <div id="tblSurveyList" class="cbp-content">
+            <span class="surveyList" id="tourStop002">
+                <div id="gridSurveyList" class="surveyList">Loading...</div>
+            </span>
+
+            <div id="selectedItemsPanel" class="topRightPanel">
+                <canvas id="c" class="myMatrixCanvasStyle tourStop010"></canvas>
+            </div>
+        </div>
+
+        <h1 class="">Survey List</h1>
+        <div id="tblSurveyQuestions" class="cbp-content">
+            <div id="trimButtons" class="trimButtons">
+                Trim available answer choices from all <strong>"sat:" or "driver:"</strong> questions&nbsp;&nbsp;
+                <button id="btnTrimLower"> -&gt;</button> <button id="btnTrimUpper">&nbsp;
+                    &lt;-</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button id="btnAddLower" class="hide">&lt;-</button> <button id="btnAddUpper" class="hide">&nbsp;
+                    -&gt;</button>
+            </div>
+
+            <div id="tourStop008">
+                <div id="divGridSurveyQuestionList"></div>
+            </div>
+        </div>
+
+        <h1 class="icon-rabbit">Nothing Yet</h1>
+        <div id="divTBD" class="cbp-content">
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
