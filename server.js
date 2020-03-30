@@ -290,7 +290,7 @@ async function authGoogle() {
 
 router.route('/beginGenerateResponses')
     .post(function (req, res, next) {
-        console.log("beginGenerateResponses");
+        // console.log("beginGenerateResponses");
         generateResponses(req, function (err, csv) {
             if (error) {
                 console.log("ERROR");
@@ -347,7 +347,7 @@ function generateResponses(req, res) {
     var myDatacenter = req.body.datacenter;
     var includeTextResponses = req.body.includeTextResponses;
     var mySelectedTextTargetQID = req.body.mySelectedTextTargetQID;
-    console.log("generateResponses mySelectedTextTargetQID = ", mySelectedTextTargetQID);
+    // console.log("generateResponses mySelectedTextTargetQID = ", mySelectedTextTargetQID);
     var myTotalNumberOfResponsesToGenerate = req.body.myTotalNumberOfResponsesToGenerate;
     myPositiveThreshold = req.body.myPositiveThreshold;
     myNegativeThreshold = req.body.myNegativeThreshold;
@@ -361,7 +361,7 @@ function generateResponses(req, res) {
     myAnswerChoicesForAllQuestions = req.body.myAnswerChoicesForAllQuestions;
 
     // var myNumberOfCalls = Math.floor(myTotalNumberOfResponsesToGenerate / myNumberOfResponsesPerCall);
-    console.log("myAnswerChoicesForAllQuestions = ", myAnswerChoicesForAllQuestions);
+    // console.log("myAnswerChoicesForAllQuestions = ", myAnswerChoicesForAllQuestions);
     // var myRemainder = myTotalNumberOfResponsesToGenerate % myNumberOfResponsesPerCall;
 
     if (includeTextResponses === true) {
@@ -535,7 +535,7 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
     //         createTicket(myStringForTicketPayload, myNewRandomDate, myRandomTextComment, myObjectForTicketPayload);
     //     };
     // };
-    console.log("generateSingleRandomResponse myQandAs = ", myQandAs);
+    // console.log("generateSingleRandomResponse myQandAs = ", myQandAs);
 };
 
 function theTextMachine(sentiment) {
@@ -618,8 +618,8 @@ function writeCSVStringHeaders(includeTextResponses) {
     myRowString = "";
     // $.each(myMCQuestionIndex, function (k, v) {
     Object.keys(myQandAs).forEach(function (k, v) {
-        console.log("k = ", k);
-        console.log("v = ", v);
+        // console.log("k = ", k);
+        // console.log("v = ", v);
 
         var myQuestionText = mySurveyDetails.Questions[k]['DataExportTag'];
         myRowString += replaceNbsps(myQuestionText) + ",";
