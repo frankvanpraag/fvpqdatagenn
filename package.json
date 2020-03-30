@@ -2,9 +2,12 @@
   "name": "datagenn",
   "version": "1.1.0",
   "description": "",
+  "engines": {
+    "node": "13.x"
+  },
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "npm node start",
     "web": "node server.js"
   },
   "author": "Joseph Bernisky",
