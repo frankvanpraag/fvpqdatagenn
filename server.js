@@ -104,15 +104,20 @@ app.use('/img', express.static(__dirname + '/img'));
 app.use('/fonts', express.static(__dirname + '/fonts'));
 app.use('/tmp', express.static(__dirname + '/tmp'));
 
-var port = process.env.PORT || 3333;
+
+
+
+
 var router = express.Router();
 router.get('/', function (req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
 });
 
 app.use('/api', router);
-app.listen(port);
-console.log('Magic happens on port ' + port);
+const PORT = process.env.PORT || 3333;
+app.listen(PORT, () => {
+    console.log(`Our app is running on port ${PORT}`);
+});
 
 router.route('/surveys')
     .get(function (req, res, next) {
