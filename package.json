@@ -24,7 +24,6 @@
     "got": "^10.6.0",
     "jquery": "^3.4.1",
     "json2csv": "^5.0.0",
-    "node-libcurl": "^2.0.3",
     "papaparse": "^5.1.1",
     "superagent": "^5.2.2",
     "utf8": "^3.0.0"
