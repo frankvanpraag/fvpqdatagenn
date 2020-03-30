@@ -70,7 +70,7 @@ function getSurveys() {
     $.ajax({
         type: 'GET',
         data: myAPIKeyData,
-        url: 'http://localhost:3333/api/surveys',
+        url: '/api/surveys',
         success: function (data) {
             // console.log("success data = ");
             parseSurveyListJSON(data);
@@ -560,7 +560,7 @@ function getNextPageOfSurveyList(nextPageURL) {
 
     $.ajax({
         contentType: "application/json; charset=utf-8",
-        url: 'http://localhost:3333/api/surveysnext',
+        url: '/api/surveysnext',
         data: surveyListNextPageURLData,
         success: function (nextPageOfData) {
             parseSurveyListJSON(nextPageOfData);
@@ -602,7 +602,7 @@ function getSurveyDetails(surveyID) {
     $.ajax({
         contentType: "application/json; charset=utf-8",
         type: 'GET',
-        url: "http://localhost:3333/api/surveys/" + mySurveyID,
+        url: "/api/surveys/" + mySurveyID,
         data: myAPIKeyData,
         success: function (data) {
             parseSurveyDetailsJSON(data);
@@ -1531,7 +1531,7 @@ async function submitResponse() {
     var myOutgoingDataJSON = JSON.stringify(myOutgoingData);
     $.ajax({
         type: 'POST',
-        url: 'http://localhost:3333/api/beginGenerateResponses',
+        url: '/api/beginGenerateResponses',
         contentType: "application/json; charset=utf-8",
         data: myOutgoingDataJSON,
         success: function (response) {
