@@ -1,4 +1,4 @@
-/////////// version 1.0188
+/////////// version 1.019
 /////////// welcome to the qualtrics survey response generation tool
 /////////// for questions reach out to Joe Bernisky jbernisky at qualtrics dot com
 var myDatacenter = new Object();

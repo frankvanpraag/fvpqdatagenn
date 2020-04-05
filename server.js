@@ -312,7 +312,7 @@ function sendFile(myAPIToken, csvString, surveyId, datacenter) {
     myOutgoingData['data'] = csvString;
     myOutgoingDataJSON = JSON.stringify(myOutgoingData);
 
-    // console.log("sendFile csvString = ", csvString);
+    console.log("sendFile csvString = ", csvString);
     // 
     var myOutgoingOptions = {
         url: myOutgoingQAPIurl,
@@ -457,11 +457,13 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
                 return;
             } else {
                 var myRandomAnswerIndex = getRandomNumber(1, myNumberOfAnswerChoicesAvailableForThisQuestion)
-                var myRandomAnswerValue = myCurrentQuestionAnswerChoices[myRandomAnswerIndex - 1];
+                var myRandomAnswerValueRaw = myCurrentQuestionAnswerChoices[myRandomAnswerIndex - 1];
+                myRandomAnswerValue = myRandomAnswerValueRaw.split('|').pop();
                 var myQuestionText = mySurveyDetails.Questions[myCurrentQuestionID]['QuestionText'];
                 // var myRandomAnswerDisplayText = JSON.stringify(mySurveyDetails.Questions[myCurrentQuestionID]['Choices'][myRandomAnswerValue]['Display']).replace(/\"/g, "");
                 // myObjectForTicketPayload[myQuestionText] = myRandomAnswerDisplayText;
                 myDataPayload[myQuestionText] = myRandomAnswerValue.replace("&nbsp;", " ");
+                console.log("myRandomAnswerValue = ", myRandomAnswerValue)
                 buildPostResponseDataString("mcsaQuestion", myCurrentQuestionID, myRandomAnswerValue);
             }
         };
@@ -595,7 +597,7 @@ function buildPostResponseDataString(type, questionID, value) {
         case "mcmaQuestion":
             myRandomValue = myValue;
             myPostResponseAnswersToSubSubmitObjectPRE[questionID] = myRandomValue;
-            myRowString += myRandomValue + ",";
+            myRowString += myRandomValue & ",";
             break;
         case "textInputQuestion":
             myRandomValue = myValue;
