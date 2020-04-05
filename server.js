@@ -353,7 +353,7 @@ function generateResponses(req, res) {
     // GSheetID = req.body.myGSheetID;
     // console.log("generateResponses GSheetID = ", GSheetID)
 
-    myQandAs = req.body.qanda;
+    myQandAs = req.body.myAnswerChoicesForAllQuestions;
     myListofTextQuestions = req.body.myListofTextQuestions;
     myStartDate = req.body.startdate;
     myEndDate = req.body.enddate;

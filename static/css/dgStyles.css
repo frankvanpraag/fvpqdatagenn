@@ -14,6 +14,7 @@ a{color:#000}
 .cssAnswerGroupContainer{display:table;border:0}
 .cssQandAnswerChoiceContainer{display:block}
 .textInputSmall{width:40px;text-align:center}
+.textInputMedium {width: 300px;}
 .textInputDatacenter{width:30px;text-align:center}
 .surveyList{border:0 solid #73ad21;padding:10px;vertical-align:top;float:left}
 .surveyQuestionList{border:0 solid #39f;padding:10px;vertical-align:top;width:600px;position:relative;z-index:1000}

@@ -311,11 +311,11 @@ function getSelectedCommentLibraryFromGoogleSheets() {
 function getTextCommentStructureFromGoogleSheets() {
     var myOutgoingData = new Object();
     var mySelectedTextLibrarySheetID = $('#selectTextCommentLibraryList').val();
-    var myGSheetID = JSON.parse(localStorage.getItem('gSheetID')); 
+    var myGSheetID = JSON.parse(localStorage.getItem('gSheetID'));
     var mySelectedTextLibrarySheetName = $('#selectTextCommentLibraryList option:selected').text();
 
     myOutgoingData['GSheetID'] = myGSheetID;
-    var myURL = "https://q.datagen.app/getTextCommentStructure" 
+    var myURL = "https://q.datagen.app/getTextCommentStructure"
 
     $.ajax({
         contentType: "application/json; charset=utf-8",
@@ -420,7 +420,6 @@ function saveUserInfoToLocalStorage() {
     // var myNumberOfTurboCycles = $("#txtNumberOfTurboCycles").val();
     // var myIntervalForTurboCycles = $("#txtSecondsBetweenTurboCycles").val();
     var myGSheetID = $("#txtGSheetID").val();
-
 
     localStorage.setItem('APIToken', JSON.stringify(myAPIToken));
     localStorage.setItem('Datacenter', JSON.stringify(myDatacenter));
@@ -576,7 +575,9 @@ function getNextPageOfSurveyList(nextPageURL) {
 //////// makes a call to get details about selected survey from qAPI
 function getSurveyDetails(surveyID) {
     var mySurveyID = surveyID;
+    mySelectedSurveyID = surveyID;
     getCommentLibraryListFromGoogleSheets();
+    loadQSATLibraryDropdown();
     // getTextCommentStructureFromGoogleSheets();
     // getSentimentThresholds();
 
@@ -977,221 +978,38 @@ function getAllCheckedCheckboxesForAllQuestions() {
         var myQuestionID = $this.attr("id");
         var myCheckboxUID = $this.attr("acuic");
         var myAnswerChoiceID = $this.attr("value");
-        // if (myAnswerChoiceID !== "selectTextCommentLibraryList" || myAnswerChoiceID !== "selectTicketTargetQuestion") {
-        //     if ($this.is(":checked")) {
-        // console.log("thisQuestionAnswerChoiceListJustAnswerValues = ", thisQuestionAnswerChoiceListJustAnswerValues);
         if (myAnswerChoiceID !== "chkIncludeTextResponses" || myAnswerChoiceID !== "chkIncludeTickets1") {
             if ($this.is(":checked")) {
-                var myAnswerChoiceIdentifier = myQuestionID + "|" + $this.attr("value"); thisQuestionAnswerChoiceList.push(myAnswerChoiceIdentifier);
+                // var myAnswerChoiceIdentifier = myQuestionID + "|" + $this.attr("value");
+                var myAnswerChoiceIdentifier = $this.attr("acuic");
+                thisQuestionAnswerChoiceList.push(myAnswerChoiceIdentifier);
                 thisQuestionAnswerChoiceListJustAnswerValues.push(myCheckboxUID)
                 allSelectedAnswerChoices[myQuestionID] = thisQuestionAnswerChoiceListJustAnswerValues;
             }
         }
     });
-
-    // console.log("thisQuestionAnswerChoiceListJustAnswerValues = ", thisQuestionAnswerChoiceListJustAnswerValues);
-
     var myQandAs = new Object();
-    console.log("myMCQuestionIndex = ", myMCQuestionIndex);
-    console.log("myMCQuestionIndex.length = ", Object.keys(myMCQuestionIndex).length);
-
-    // console.log("thisQuestionAnswerChoiceListJustAnswerValues = ", thisQuestionAnswerChoiceListJustAnswerValues);
     $.each(myMCQuestionIndex, function (i, v) {
         var _myCurrentQuestionID = i;
-        console.log("_myCurrentQuestionID i = ", _myCurrentQuestionID);
-        console.log("thisQuestionAnswerChoiceListJustAnswerValues = ", thisQuestionAnswerChoiceList);
         var myCurrentQuestionAnswerChoices = thisQuestionAnswerChoiceList.filter(s => s.includes(_myCurrentQuestionID + "|"));
-        console.log("myCurrentQuestionAnswerChoices = ", myCurrentQuestionAnswerChoices);
-        // var myCurrentQuestionAnswerChoices = thisQuestionAnswerChoiceList.filter(function(e){e.questionid });
         var myCandidateAnswerChoicesForThisQuestion = [];
         for (var key in myCurrentQuestionAnswerChoices) {
             var myQIDandAvalue = myCurrentQuestionAnswerChoices[key];
             var myValueOnly = myQIDandAvalue.split("|")[1];
-            myCandidateAnswerChoicesForThisQuestion.push(myValueOnly);
+            // myCandidateAnswerChoicesForThisQuestion.push(myValueOnly);
+            myCandidateAnswerChoicesForThisQuestion.push(myQIDandAvalue);
         }
         myQandAs[_myCurrentQuestionID] = myCandidateAnswerChoicesForThisQuestion;
     });
     return myQandAs;
 }
 
-// function generateSingleRandomResponse() {
-//     //////// If a checkbox is checked it represents a possible answer choice
-//     var thisQuestionAnswerChoiceList = [];
-//     var myStringForTicketPayload = "";
-//     $("input:checkbox").each(function () {
-//         var $this = $(this);
-//         var myQuestionID = $this.attr("id");
-//         var myQuestionText = $this.parent().attr("questionText")
-//         var myAnswerChoiceID = $this.attr("value");
-//         if (myAnswerChoiceID !== "selectTextCommentLibraryList" || myAnswerChoiceID !== "selectTicketTargetQuestion") {
-//             if ($this.is(":checked")) {
-//                 var myAnswerChoiceIdentifier = myQuestionID + "|" + $this.attr("value");
-//                 thisQuestionAnswerChoiceList.push(myAnswerChoiceIdentifier);
-//                 myListOfAllSelectedAnswerChoices.push(myCheckboxUID);
-//                 // allSelectedAnswerChoices[myQuestionID] = thisQuestionAnswerChoiceList;
-//             }
-//         }
-//     });
-
-//     // console.log("generateSingleRandomResponse allSelectedAnswerChoices = ", JSON.stringify(allSelectedAnswerChoices));
-//     ///////////////////////////////
-
-//     //////// If a checkbox is checked it represents a possible answer choice
-
-//     // var myStringForTicketPayload = "";
-//     // var myQuestionID;
-//     // var myListOfCheckboxesForThisQuestion = [];
-//     // var thisQuestionAnswerChoiceList = [];
-
-//     // $("input:checkbox").each(function () {
-//     //     var $this = $(this);
-//     //     // var myQuestionText = $this.parent().attr("questionText")
-//     //     var myAnswerChoiceID = $this.attr("value");
-//     //     // list the checkboxes that should not be associated with answer choices
-//     //     if (myAnswerChoiceID !== "selectTextCommentLibraryList" || myAnswerChoiceID !== "selectTicketTargetQuestion") {
-//     //         if ($this.is(":checked")) {
-//     //             myQuestionID = $this.attr("id");
-//     //             var myAnswerChoiceIdentifier = myQuestionID + "|" + $this.attr("value");
-//     //             var myCheckboxUID = $this.attr("acuic");
-//     //             myListOfAllSelectedAnswerChoices.push(myCheckboxUID);
-//     //             thisQuestionAnswerChoiceList.push(myAnswerChoiceIdentifier);
-//     //         }
-//     //     }
-//     // });
-//     // allSelectedAnswerChoices[myQuestionID] = thisQuestionAnswerChoiceList;
-
-//     ///////////////////////////////
-
-//     // var allSelectedAnswerChoices = new Object();
-//     // var myListOfAllSelectedAnswerChoices = [];
-
-//     //////// Loop through all multiple choice questions in survey
-//     //////// for each question, look at the available answer choices (checked)
-//     //////// and pick one at random
-
-//     console.log('myMCQuestionIndex = ' + myMCQuestionIndex);
-
-
-//     $.each(myMCQuestionIndex, function (k, v) {
-//         var myCurrentQuestionID = k;
-//         var myCurrentQuestionAnswerChoices = thisQuestionAnswerChoiceList.filter(s => s.includes(myCurrentQuestionID + "|"));
-//         var myNumberOfAnswerChoicesAvailableForThisQuestion = Object.keys(myCurrentQuestionAnswerChoices).length;
-//         if (myNumberOfAnswerChoicesAvailableForThisQuestion > 0) {
-//             var myOriginalQuestionIndex = myMCQuestionIndex[myCurrentQuestionID];
-//             var myQuestionTypeSelector = mySurveyDetails.Questions[myOriginalQuestionIndex]['Selector'];
-//             var myFirstTwo = myQuestionTypeSelector.substring(0, 2).toLowerCase();
-//             var myMultipleAnswerPayload = [];
-//             if (myFirstTwo === "ma") {
-//                 var myListOfAvailableAnswerChoices = myCurrentQuestionAnswerChoices;
-//                 // console.log("myCurrentQuestionAnswerChoices" + JSON.stringify(myCurrentQuestionAnswerChoices));
-//                 $.each(myListOfAvailableAnswerChoices, function (a, c) {
-//                     myCoin = Math.round(Math.random());
-//                     if (myCoin === 1) {
-//                         var myFields = c.split('|');
-//                         var myRandomAnswerValue = myFields[1];
-//                         myMultipleAnswerPayload.push(myRandomAnswerValue);
-//                     }
-//                 });
-//                 var myMultipleAnswerPayloadString = myMultipleAnswerPayload.map(String);
-//                 buildPostResponseDataString("mcmaQuestion", myCurrentQuestionID, myMultipleAnswerPayloadString);
-//                 return;
-//             } else {
-//                 var myRandomAnswerIndex = getRandomNumber(1, myNumberOfAnswerChoicesAvailableForThisQuestion)
-//                 var myRandomAnswerValueAndQID = myCurrentQuestionAnswerChoices[myRandomAnswerIndex - 1];
-//                 var myFields = myRandomAnswerValueAndQID.split('|');
-//                 var myRandomAnswerValue = myFields[1];
-//                 var myQuestionText = mySurveyDetails.Questions[myOriginalQuestionIndex]['QuestionText'];
-//                 var myRandomAnswerDisplayText = JSON.stringify(mySurveyDetails.Questions[myOriginalQuestionIndex]['Choices'][myRandomAnswerValue]['Display']).replace(/\"/g, "");
-//                 myObjectForTicketPayload[myQuestionText] = myRandomAnswerDisplayText;
-//                 myDataPayload[myQuestionText] = myRandomAnswerValue.replace("&nbsp;", " ");
-//                 myQuestionIDSAndText[myCurrentQuestionID] = myRandomAnswerValueAndQID;
-//                 buildPostResponseDataString("mcsaQuestion", myCurrentQuestionID, myRandomAnswerValue);
-//             }
-//         };
-//     });
-//     //////// if enable text comments is checked
-//     var myRandomTextComment = "";
-//     var includeTextCommentsInResponses = $("#chkIncludeTextResponses").is(':checked');
-//     if (includeTextCommentsInResponses === false) {
-//         // myRowString = removeLastComma(myRowString) + "\n";
-//     } else {
-//         //////// get the question id that you want to associate text comments with
-//         var mySelectedTextTargetQID = $('#selectTextCommentTargetQuestion').val();
-//         //////// based on the scale of the selected text target question
-//         //////// normalize selected value from 0-100 (in the normalize function)
-//         //////// and convert to the appropriate sentiment
-
-//         var myTextSentiment = normalizeTextCommentScore(myPostResponseAnswersToSubSubmitObjectPRE[mySelectedTextTargetQID]);
-//         //////// this loop exists so that if no comment is returned (for neutral scores)
-//         //////// it skips the text question instead of entering a blank response
-//         //////// which shows up in the response data as spaces
-//         // if (myTextSentiment != "neutral") {
-//         // $.each(myListofTextQuestions, function (i, j) {
-//         $.each(myTextQuestionIndex, function (i, j) {
-//             myRandomTextComment = theTextMachine(myTextSentiment);
-//             if (+myRandomTextComment.length > +10) {
-//                 buildPostResponseDataString("textInputQuestion", j, myRandomTextComment);
-//             } else { };
-//         });
-//         // myRowString = removeLastComma(myRowString);
-//         // };
-//     };
-//     // console.log("myRandomTextComment = " + myRandomTextComment);
-
-//     //////// Create a random date for the current survey response
-//     var myDateRangeStart = $("#txtStartDate").datepicker('getDate');
-//     var myDateRangeEnd = $("#txtEndDate").datepicker('getDate');
-//     if (isValidDate(myDateRangeEnd) == false) {
-//         myDateRangeEnd = myDateRangeStart;
-//     };
-//     var myNewRandomDate = randomDate(myDateRangeStart, myDateRangeEnd);
-//     buildPostResponseDataString("startDate", "NA", myNewRandomDate);
-
-//     //remove the final comma, make JSON endpoint call if enabled, then submit csv string to server
-//     myRowString = removeLastComma(myRowString) + "\n";
-
-//     var includeTicketCreation1 = $("#chkIncludeTickets1").is(':checked');
-
-//     //////// if create tickets1 is checked
-//     var includeTicketCreation1 = $("#chkIncludeTickets1").is(':checked');
-//     if (includeTicketCreation1 === true) {
-//         var myPercentageOfResponsesToCreateTicketsFor1 = $('#txtTicketPercentage1').val();
-//         myRandomNumber1 = Math.random() * 100;
-//         if (myRandomNumber1 < myPercentageOfResponsesToCreateTicketsFor1) {
-//             createTicket(myStringForTicketPayload, myNewRandomDate, myRandomTextComment, myObjectForTicketPayload);
-//         };
-//     };
-// };
-
-// function sendCSVStringToServer(CSVString) {
-//     var myOutgoingData = new Object();
-//     var myDatacenter = JSON.parse(localStorage.getItem('Datacenter'));
-//     var myAPIToken = JSON.parse(localStorage.getItem('APIToken'));
-//     myOutgoingData['surveyID'] = mySelectedSurveyID;
-//     myOutgoingData['datacenter'] = myDatacenter;
-//     myOutgoingData['apiToken'] = myAPIToken;
-//     myOutgoingData['csvString'] = CSVString;
-//     myOutgoingData = JSON.stringify(myOutgoingData);
-
-//     $.ajax({
-//         type: 'POST',
-//         url: '/purgeThenSaveCSVdataToDB',
-//         contentType: "application/json; charset=utf-8",
-//         data: myOutgoingData,
-//         success: function (response) {
-//             console.log("testLargeString complete");
-//             console.log("response = ", JSON.stringify(response));
-//         }
-//     });
-// }
-
 function doGoogleStuff() {
-   getSelectedCommentLibraryFromGoogleSheets();
+    getSelectedCommentLibraryFromGoogleSheets();
     myCommentStructure = getTextCommentStructureFromGoogleSheets();
     mySentimentThresholds = getSentimentThresholds();
-    
 }
-    
+
 function getSentimentThresholds() {
     var myOutgoingData = new Object();
     var myGSheetID = JSON.parse(localStorage.getItem('gSheetID'));
@@ -1233,7 +1051,6 @@ function normalizeTextCommentScore(rawScore) {
     } else {
         mySentimentGroup = "neutral";
     }
-
     return mySentimentGroup;
 }
 
@@ -1483,6 +1300,109 @@ function lengthInUtf8Bytes(str) {
     return str.length + (m ? m.length : 0);
 }
 
+function saveQSAT() {
+    var mySelectedAnswerChoices = getAllCheckedCheckboxesForAllQuestions();
+    // var myQSATNameInput = $("#txtQSATName").val().replace(/\s/g, '');
+    var myQSATNameInput = $("#txtQSATName").val();
+    var myqSATLib = new localStorageDB("myQSATLibrary", localStorage);
+    var myUID = Math.round(Date.now() / 1000);
+    var myQSATName = myQSATNameInput + " [" + myUID + "]";
+
+    // Check if the database was just created. Useful for initial database setup
+    if (myqSATLib.isNew()) {
+        myqSATLib.createTable("tblLocalQSAT", ["uid", "surveyID", "qSATName", "qSATContent"]);
+        myqSATLib.insert("tblLocalQSAT", { uid: myUID, surveyID: mySelectedSurveyID, qSATName: myQSATName, qSATContent: mySelectedAnswerChoices })
+    } else {
+        if (myqSATLib.tableExists('tblLocalQSAT')) {
+            myqSATLib.insert("tblLocalQSAT", { uid: myUID, surveyID: mySelectedSurveyID, qSATName: myQSATName, qSATContent: mySelectedAnswerChoices })
+            myqSATLib.commit();
+        } else {
+            myqSATLib.createTable("tblLocalQSAT", ["uid", "surveyID", "qSATName", "qSATContent"]);
+            myqSATLib.insert("tblLocalQSAT", { uid: myUID, surveyID: mySelectedSurveyID, qSATName: myQSATName, qSATContent: mySelectedAnswerChoices })
+            myqSATLib.commit();
+        }
+    };
+    loadQSATLibraryDropdown();
+}
+
+function deleteSelectedQSAT() {
+    var myqSATLibaryListDropdown = $("#selectQSAT");
+    var mySelectedQSATLibaryUID = myqSATLibaryListDropdown.val();
+    var mySelectedQSATLibraryName = myqSATLibaryListDropdown.find('option:selected').text();
+    var myConfirmation = confirm("are you sure you want to delete {}?".format(mySelectedQSATLibraryName));
+    if (myConfirmation === true) {
+        var myQSATLib = localStorageDB("myQSATLibrary", localStorage);
+        myQSATLib.deleteRows("tblLocalQSAT", { uid: mySelectedQSATLibaryUID });
+        myQSATLib.commit();
+        console.log("deletion complete ", mySelectedQSATLibaryUID);
+        loadQSATLibraryDropdown();
+    }
+}
+
+function loadQSATLibraryDropdown() {
+
+    var myQSATLib = localStorageDB("myQSATLibrary", localStorage);
+    // console.log(myQSATLib.queryAll("tblLocalQSAT"));
+    console.log("mySurveyID = ", mySelectedSurveyID);
+    if (myQSATLib.tableExists('tblLocalQSAT')) {
+        var myLibrary = myQSATLib.queryAll("tblLocalQSAT", {
+            query: { surveyID: mySelectedSurveyID }
+        });
+
+        var myqSATLibaryListDropdown = $("#selectQSAT");
+        myqSATLibaryListDropdown.empty();
+        myLibrary.forEach(function (k, v) {
+            var myUID = k.uid;
+            var myQSATName = k.qSATName;
+            var myQSATContent = k.qSATContent;
+            myqSATLibaryListDropdown.append($("<option />").val(myUID).text(myQSATName));
+        });
+    };
+}
+
+function loadSelectedQSAT() {
+    var myqSATLibaryListDropdown = $("#selectQSAT");
+    var mySelectedQSATLibaryUID = myqSATLibaryListDropdown.val();
+    var myQATLib = localStorageDB("myQSATLibrary", localStorage);
+    var mySelectedLibrary = myQATLib.queryAll("tblLocalQSAT", {
+        query: { uid: mySelectedQSATLibaryUID }
+    });
+    var myListOfAllCheckedAnswerChoices = [];
+    var mySelectedQSATContent = mySelectedLibrary[0].qSATContent;
+    // console.log("loadSelectedQSAT mySelectedQSATContent = ", mySelectedQSATContent);
+    Object.keys(mySelectedQSATContent).forEach(function (k, v) {
+        var myCurrentQuestionID = k;
+        var mySingleQuestionContent = mySelectedQSATContent[k];
+        var mySelectedCheckboxes = $('input#' + myCurrentQuestionID + ':checked');
+        mySelectedCheckboxes.each(function () {
+            var myQID = $(this).prop("id");
+            var myDivID = "div" + myQID;
+            $('#' + myDivID).find('input:checkbox').each(function (a, b) {
+                var myACUIC = $(this).attr("acuic");
+                $('input#' + myQID).prop('checked', false);
+            });
+        });
+        mySingleQuestionContent.forEach(function (a, b) {
+            if (a.length > 0) {
+                myListOfAllCheckedAnswerChoices.push(a);
+            };
+        });
+    });
+    // console.log("*** myListOfAllCheckedAnswerChoices = ", myListOfAllCheckedAnswerChoices);
+
+    $("input:checkbox").each(function () {
+        var $this = $(this);
+        var myQuestionID = $this.attr("id");
+        var myCheckboxUID = $this.attr("acuic");
+        var myAnswerChoiceID = $this.attr("value");
+        if (myAnswerChoiceID !== "chkIncludeTextResponses" || myAnswerChoiceID !== "chkIncludeTickets1") {
+            if (myListOfAllCheckedAnswerChoices.indexOf(myCheckboxUID) > -1) {
+                $this.prop('checked', true);
+            }
+        }
+    });
+}
+
 async function submitResponse() {
     // console.log("mySurveyDetails = " + JSON.stringify(mySurveyDetails))
     if (preProcessInputCheck() !== "ok") {
@@ -1490,14 +1410,13 @@ async function submitResponse() {
     }
     // logDGActivity();
 
-    console.log("submitResponse myTotalNumberOfResponsesToGenerate = ", myNumberOfResponsesToGenerate);
+    // console.log("submitResponse myTotalNumberOfResponsesToGenerate = ", myNumberOfResponsesToGenerate);
     var myTotalNumberOfResponsesToGenerate = myNumberOfResponsesToGenerate;
     var myAPIToken = JSON.parse(localStorage.getItem('APIToken'));
     var myStartDate = JSON.parse(localStorage.getItem('StartDate'));
     var myEndDate = JSON.parse(localStorage.getItem('EndDate'));
 
     var includeTextResponses = $("#chkIncludeTextResponses").is(':checked');
-
 
     myAnswerChoicesForAllQuestions = getAllCheckedCheckboxesForAllQuestions();
     var myOutgoingData = new Object();
@@ -1509,11 +1428,10 @@ async function submitResponse() {
     myOutgoingData['enddate'] = myEndDate;
     myOutgoingData['myPositiveThreshold'] = myPositiveThreshold;
     myOutgoingData['myNegativeThreshold'] = myNegativeThreshold;
-    myOutgoingData['qanda'] = myAnswerChoicesForAllQuestions;
+    myOutgoingData['myAnswerChoicesForAllQuestions'] = myAnswerChoicesForAllQuestions;
     myOutgoingData['includeTextResponses'] = includeTextResponses;
     myOutgoingData['myListOfAllSelectedAnswerChoices'] = myListOfAllSelectedAnswerChoices;
-    // console.log("includeTextResponses = ", includeTextResponses);
-    console.log("*** submitResponse myListOfAllSelectedAnswerChoices = ", myListOfAllSelectedAnswerChoices);
+    console.log("*** submitResponse myAnswerChoicesForAllQuestions = ", myAnswerChoicesForAllQuestions);
 
     if (includeTextResponses === true) {
         var mySelectedTextTargetQID = $('#selectTextCommentTargetQuestion').val();
@@ -1525,9 +1443,9 @@ async function submitResponse() {
         myOutgoingData['myCommentPartsLibrary'] = myCommentPartsLibraryObject;
     }
     // console.log("*** myOutgoingData = ", myOutgoingData);
-    
+
     console.log("myListofTextQuestions.length = ", myListofTextQuestions.length);
-  
+
     var myOutgoingDataJSON = JSON.stringify(myOutgoingData);
     $.ajax({
         type: 'POST',
@@ -1539,8 +1457,6 @@ async function submitResponse() {
             console.log("uploadTransformedFile2 response = ", JSON.stringify(response));
         }
     })
-
-
 }
 
 function getTextLibrary() {
@@ -1583,7 +1499,7 @@ function generateRandomData() {
     for (let c = 0; c < myNumberOfResponsesPerCall; c++) {
         generateSingleRandomResponse();
         // myJSONPostResponsePayload.values = myPostResponseAnswersToSubSubmitObjectPRE;
-        // myPostResponseAnswersToSubSubmitObjectPRE = {};
+        // myPostResponseAnswersToSubSubmitObjectxPRE = {};
     }
 
 }
@@ -1600,79 +1516,6 @@ function download_csv() {
     hiddenElement.download = '_UploadThisFile_{}.csv'.format(mySelectedFileName);
     hiddenElement.click();
 }
-
-
-///////////////////////////////
-// function writeCSVStringHeaders() {
-//     // console.log("mySurveyDetails = " + JSON.stringify(mySurveyDetails));
-//     myRowString = "";
-//     $.each(myMCQuestionIndex, function (k, v) {
-//         var myQuestionText = mySurveyDetails.Questions[v]['DataExportTag'];
-//         myRowString += replaceNbsps(myQuestionText) + ",";
-//     });
-
-//     var includeTextCommentsInResponses = $("#chkIncludeTextResponses").is(':checked');
-//     if (includeTextCommentsInResponses === false) {
-//     } else {
-//         if (Object.keys(myTextQuestionIndex).length > 0) {
-//             $.each(myTextQuestionIndex, function (a, b) {
-//                 var myQuestionText = mySurveyDetails.Questions[b]['DataExportTag'];
-//                 myQuestionText = myQuestionText.replace(",", " ");
-//                 myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
-//                 myRowString += replaceNbsps(myQuestionText) + ",";
-//             });
-//         };
-//     };
-//     myRowString += "StartDate \n";
-
-//     $.each(myMCQuestionIndex, function (k, v) {
-//         var myQuestionText = mySurveyDetails.Questions[v]['QuestionDescription'];
-//         myQuestionText = replaceNbsps(myQuestionText);
-//         myQuestionText = myQuestionText.replace(",", " ");
-//         myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
-//         myQuestionText = myQuestionText;
-//         myRowString += myQuestionText + ",";
-//     });
-
-//     var includeTextCommentsInResponses = $("#chkIncludeTextResponses").is(':checked');
-//     if (includeTextCommentsInResponses === false) {
-
-//     }
-//     else {
-//         if (Object.keys(myTextQuestionIndex).length > 0) {
-//             $.each(myTextQuestionIndex, function (t, r) {
-//                 var myQuestionText = mySurveyDetails.Questions[r]['QuestionDescription'];
-//                 myQuestionText = replaceNbsps(myQuestionText);
-//                 myQuestionText = myQuestionText.replace(",", " ");
-//                 myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
-//                 myQuestionText = myQuestionText;
-//                 myRowString += myQuestionText + ",";
-//             });
-//         };
-//     };
-//     myRowString += "StartDate \n";
-
-//     $.each(myMCQuestionIndex, function (k, v) {
-//         var myQuestionID = mySurveyDetails.Questions[v]['QuestionID'];
-//         var myString3 = '\"{\"\"ImportId\"\":\""{}\"\"}\"'.format(myQuestionID);
-//         myRowString += myString3 + ",";
-//     });
-//     var includeTextCommentsInResponses = $("#chkIncludeTextResponses").is(':checked');
-//     if (includeTextCommentsInResponses === false) {
-//     }
-//     else {
-//         if (Object.keys(myTextQuestionIndex).length > 0) {
-//             $.each(myTextQuestionIndex, function (t, r) {
-//                 var myQuestionID = mySurveyDetails.Questions[r]['QuestionID'] + "_TEXT";;
-//                 var myString3 = '\"{\"\"ImportId\"\":\""{}\"\"}\"'.format(myQuestionID);
-//                 myRowString += myString3 + ",";
-//             });
-//         };
-//     };
-//     myRowString += '\"{ \"\"ImportId\"\": \"\"startDate\"\", \"\"timeZone\"\": \"\"America/Denver\"\"}\"\n'
-// }
-
-
 
 function uploadTransformedFile2() {
     console.log("myrowstring = ", myRowString);
@@ -1755,30 +1598,6 @@ function getImportStatus(myIncomingData) {
     }, 2000)
 }
 
-// function uploadTransformedCSVFile() {
-//     // uploadTransformedFile2();
-//     var myUploadFileOutput = document.getElementById('file');
-//     var myForm = new FormData($('#upload-file')[0]);
-//     var myAPIToken = JSON.parse(localStorage.getItem('APIToken'));
-//     var myDatacenter = JSON.parse(localStorage.getItem('Datacenter'));
-
-//     myForm.append('surveyID', mySelectedSurveyID)
-//     myForm.append('apiToken', myAPIToken);
-//     myForm.append('datacenter', myDatacenter);
-
-// $.ajax({
-//     type: 'POST',
-//     url: '/uploadFile',
-//     data: myForm,
-//     contentType: false,
-//     processData: false,
-//     success: function (data) {
-//         console.log('Success! = ' + JSON.stringify(data));
-//         getImportStatus(data);
-//     }
-// });
-// }
-
 function loadFile(path) {
     console.log("loadFile START");
     var xhr = new XMLHttpRequest();
@@ -1794,8 +1613,6 @@ function loadFile(path) {
     xhr.open("GET", path, true);
     xhr.send();
 }
-
-////////////////////////////////
 
 function removeLastComma(strng) {
     var n = strng.lastIndexOf(",");
@@ -1967,6 +1784,19 @@ function loadStringReplacementFunction() {
 }
 
 function loadMyGlobalEventHandlers() {
+    $('#btnSaveQSAT').click(function () {
+        saveQSAT();
+    });
+
+    $('#btnApplyQSAT').click(function () {
+        loadSelectedQSAT();
+    });
+    btnDeleteQSAT
+    $('#btnDeleteQSAT').click(function () {
+        deleteSelectedQSAT();
+    });
+
+
     $('#btnUploadFile3').click(function () {
         // var mystring = '{"meta":{"httpStatus":"200 - OK","requestId":"56304c09 - cf7b - 4d37 - bdb7 - b744c93266ff"},"result":{"percentComplete":100,"status":"complete"}}';
         // mystring = JSON.parse(mystring);
@@ -1985,7 +1815,7 @@ function loadMyGlobalEventHandlers() {
 
     $("#selectTextCommentLibraryList").change(function (event) {
         doGoogleStuff();
-        
+
     });
 
     $("#txtAPIToken").keyup(function () { }).focus(function () {

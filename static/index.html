@@ -34,6 +34,7 @@
     <link rel="shortcut icon" href="#">
     <script src="/js/pace.js" type="text/javascript"></script>
     <script src="/js/multithread.js" type="text/javascript"></script>
+    <script src="/js/localStorageDB.js" type="text/javascript"></script>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
@@ -61,14 +62,14 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WP7F48V" height="0" width="0"
                 style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-  
+
 
 
     <table>
         <tr>
             <td colspan="2">
                 <div id="divHeaderPanel" class="divHeaderPanel">
-                   
+
                     <br />
                     <span id="tourStop001">
                         Your API Token: <span class="apiTokenContainer">
@@ -98,7 +99,7 @@
 
                     </div> -->
                 </div>
-                 <!-- <div id="lds-spinner" class="lds-spinner">
+                <!-- <div id="lds-spinner" class="lds-spinner">
                      <div></div>
                      <div></div>
                      <div></div>
@@ -129,7 +130,6 @@
         </tr>
         <tr>
             <td colspan="2">
-              
                 <div id="divUserControlPanel1" class="divUserControlPanel">
 
                     <span id="tourStop003">
@@ -145,13 +145,26 @@
                         # of Responses to Generate: <input type="text" id="txtNumberOfResponses" value="1"
                                class="textInputSmall"></input></span>&nbsp;
                     <button id="btnGenerateResponses" class="tourStop009">Generate Responses</button>
-                    <br /><br />
-                    <span class='infoMessageText'>
-                        UPDATE: The number of responses you can create is now unlimited. Datasets larger than 500 responses will be split up
-                        into batches of 500 responses at a time.
-                    </span>
                 </div>
             </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="divUserControlPanel4" class="divUserControlPanel">
+                Template name:
+                <br /><input type="text" id="txtQSATName" class="textInputMedium"></input>
+                <p />
+                <button id="btnSaveQSAT">Save as Template</button>
+                <p/>
+                 Templates for this survey:
+                 <br /><select name="selectQSAT" id="selectQSAT" class="mediumDropdown">
+                 </select>
+                 <p />
+                 <button id="btnApplyQSAT">Apply Template</button>&nbsp;&nbsp;
+                 <button id="btnDeleteQSAT">Delete </button>
+                </div>
+            </td>
+
         </tr>
         <tr>
             <td colspan="2" id="tourStop006">
