@@ -979,9 +979,9 @@ function getAllCheckedCheckboxesForAllQuestions() {
         var myCheckboxUID = $this.attr("acuic");
         var myAnswerChoiceID = $this.attr("value");
         // console.log("myAnswerChoiceID = ", myAnswerChoiceID);
-        console.log("myQuestionID = ", myQuestionID);
-        console.log("myCheckboxUID = ", myCheckboxUID);
-        console.log("myAnswerChoiceID = ", myAnswerChoiceID);
+        // console.log("myQuestionID = ", myQuestionID);
+        // console.log("myCheckboxUID = ", myCheckboxUID);
+        // console.log("myAnswerChoiceID = ", myAnswerChoiceID);
 
 
 
@@ -1872,7 +1872,7 @@ function loadMyGlobalEventHandlers() {
     }).focus(function () {
         //
     }).blur(function () {
-        console.log("<br/>number of responses saved to local storage<br/>");
+        // console.log("<br/>number of responses saved to local storage<br/>");
         var myVal = $(this).val();
         if (myVal > 10000) {
             $("#txtNumberOfResponses").val("10000");
