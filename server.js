@@ -450,6 +450,8 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
                 var myMultipleAnswerPayloadString = myMultipleAnswerPayload.map(String);
                 if (myMultipleAnswerPayloadString.length != 0) {
                     buildPostResponseDataString("mcmaQuestion", myCurrentQuestionID, '"' + myMultipleAnswerPayloadString + '"');
+                    
+                    console.log("myMultipleAnswerPayloadString = ", myMultipleAnswerPayloadString);
                 }
                 else {
                     buildPostResponseDataString("mcmaQuestion", myCurrentQuestionID, '');

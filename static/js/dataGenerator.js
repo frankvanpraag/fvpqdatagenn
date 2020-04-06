@@ -978,19 +978,34 @@ function getAllCheckedCheckboxesForAllQuestions() {
         var myQuestionID = $this.attr("id");
         var myCheckboxUID = $this.attr("acuic");
         var myAnswerChoiceID = $this.attr("value");
-        if (myAnswerChoiceID !== "chkIncludeTextResponses" || myAnswerChoiceID !== "chkIncludeTickets1") {
+        // console.log("myAnswerChoiceID = ", myAnswerChoiceID);
+        console.log("myQuestionID = ", myQuestionID);
+        console.log("myCheckboxUID = ", myCheckboxUID);
+        console.log("myAnswerChoiceID = ", myAnswerChoiceID);
+
+
+
+
+        if (myQuestionID == "chkIncludeTextResponses" || myQuestionID == "chkIncludeTickets1") {
+            // console.log("skipping");
+
+        } else {
+
             if ($this.is(":checked")) {
                 // var myAnswerChoiceIdentifier = myQuestionID + "|" + $this.attr("value");
+
                 var myAnswerChoiceIdentifier = $this.attr("acuic");
                 thisQuestionAnswerChoiceList.push(myAnswerChoiceIdentifier);
                 thisQuestionAnswerChoiceListJustAnswerValues.push(myCheckboxUID)
                 allSelectedAnswerChoices[myQuestionID] = thisQuestionAnswerChoiceListJustAnswerValues;
-            }
+
+            };
         }
     });
     var myQandAs = new Object();
     $.each(myMCQuestionIndex, function (i, v) {
         var _myCurrentQuestionID = i;
+        console.log("thisQuestionAnswerChoiceList = ", thisQuestionAnswerChoiceList);
         var myCurrentQuestionAnswerChoices = thisQuestionAnswerChoiceList.filter(s => s.includes(_myCurrentQuestionID + "|"));
         var myCandidateAnswerChoicesForThisQuestion = [];
         for (var key in myCurrentQuestionAnswerChoices) {
@@ -1343,7 +1358,7 @@ function loadQSATLibraryDropdown() {
 
     var myQSATLib = localStorageDB("myQSATLibrary", localStorage);
     // console.log(myQSATLib.queryAll("tblLocalQSAT"));
-    console.log("mySurveyID = ", mySelectedSurveyID);
+    // console.log("mySurveyID = ", mySelectedSurveyID);
     if (myQSATLib.tableExists('tblLocalQSAT')) {
         var myLibrary = myQSATLib.queryAll("tblLocalQSAT", {
             query: { surveyID: mySelectedSurveyID }
@@ -1431,7 +1446,7 @@ async function submitResponse() {
     myOutgoingData['myAnswerChoicesForAllQuestions'] = myAnswerChoicesForAllQuestions;
     myOutgoingData['includeTextResponses'] = includeTextResponses;
     myOutgoingData['myListOfAllSelectedAnswerChoices'] = myListOfAllSelectedAnswerChoices;
-    console.log("*** submitResponse myAnswerChoicesForAllQuestions = ", myAnswerChoicesForAllQuestions);
+    // console.log("*** submitResponse myAnswerChoicesForAllQuestions = ", myAnswerChoicesForAllQuestions);
 
     if (includeTextResponses === true) {
         var mySelectedTextTargetQID = $('#selectTextCommentTargetQuestion').val();
@@ -1444,7 +1459,7 @@ async function submitResponse() {
     }
     // console.log("*** myOutgoingData = ", myOutgoingData);
 
-    console.log("myListofTextQuestions.length = ", myListofTextQuestions.length);
+    // console.log("myListofTextQuestions.length = ", myListofTextQuestions.length);
 
     var myOutgoingDataJSON = JSON.stringify(myOutgoingData);
     $.ajax({
