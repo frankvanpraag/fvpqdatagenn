@@ -1005,7 +1005,7 @@ function getAllCheckedCheckboxesForAllQuestions() {
     var myQandAs = new Object();
     $.each(myMCQuestionIndex, function (i, v) {
         var _myCurrentQuestionID = i;
-        console.log("thisQuestionAnswerChoiceList = ", thisQuestionAnswerChoiceList);
+        // console.log("thisQuestionAnswerChoiceList = ", thisQuestionAnswerChoiceList);
         var myCurrentQuestionAnswerChoices = thisQuestionAnswerChoiceList.filter(s => s.includes(_myCurrentQuestionID + "|"));
         var myCandidateAnswerChoicesForThisQuestion = [];
         for (var key in myCurrentQuestionAnswerChoices) {
