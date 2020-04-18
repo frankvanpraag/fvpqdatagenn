@@ -103,10 +103,6 @@ app.use('/img', express.static(__dirname + '/img'));
 app.use('/fonts', express.static(__dirname + '/fonts'));
 app.use('/tmp', express.static(__dirname + '/tmp'));
 
-
-
-
-
 var router = express.Router();
 router.get('/', function (req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
@@ -294,8 +290,6 @@ router.route('/beginGenerateResponses')
             if (error) {
                 console.log("ERROR");
             } else {
-                console.log("generateResponses success");
-                // console.log("mystery csv = ", csv);
                 res.setHeader('Content-disposition', 'attachment; filename=data.csv');
                 res.set('Content-Type', 'text/csv');
                 res.status(200).send("myCSVstring");
@@ -312,7 +306,7 @@ function sendFile(myAPIToken, csvString, surveyId, datacenter) {
     myOutgoingData['data'] = csvString;
     myOutgoingDataJSON = JSON.stringify(myOutgoingData);
 
-    console.log("sendFile csvString = ", csvString);
+    console.log("sendFile csvString = \n", csvString);
     // 
     var myOutgoingOptions = {
         url: myOutgoingQAPIurl,
@@ -359,17 +353,10 @@ function generateResponses(req, res) {
     myEndDate = req.body.enddate;
     myAnswerChoicesForAllQuestions = req.body.myAnswerChoicesForAllQuestions;
 
-    // var myNumberOfCalls = Math.floor(myTotalNumberOfResponsesToGenerate / myNumberOfResponsesPerCall);
-    // console.log("myAnswerChoicesForAllQuestions = ", myAnswerChoicesForAllQuestions);
-    // var myRemainder = myTotalNumberOfResponsesToGenerate % myNumberOfResponsesPerCall;
-
     if (includeTextResponses === true) {
         myCommentPartsLibrary = req.body.myCommentPartsLibrary;
         myTextCommentStructure = req.body.myTextCommentStructure;
         mySentimentThresholds = req.body.mySentimentThresholds;
-        // var mySentimentThresholds = getSentimentThresholds(GSheetID);
-        // console.log("myQandAs = ", myQandAs);
-        // console.log("myCommentPartsLibrary = ", myCommentPartsLibrary);
     };
 
     // get survey details
@@ -391,9 +378,6 @@ function generateResponses(req, res) {
             mySurveyDetails = body.result;
             // console.log("mySurveyDetails = ", mySurveyDetails);
             var myResponse = myRes;
-            // for (let a = 0; a < myNumberOfCalls; a++) {
-            // console.log("uploading batch #{} ".format(a + 1));
-
             writeCSVStringHeaders(includeTextResponses);
             var myJSONPostResponsePayload = new Object();
             myJSONPostResponsePayload.apiToken = myAPIToken;
@@ -405,7 +389,8 @@ function generateResponses(req, res) {
                 generateSingleRandomResponse(includeTextResponses, mySelectedTextTargetQID);
             };
 
-            var myCleanedRowString = myRowString.replace(/[#]/g, '');
+            var myCleanedRowString = myRowString.replace(/#/g, '');
+            // var myCleanedRowString = myRowString;
             var myCleanedRowStringUTF8 = utf8.encode(myCleanedRowString);
             sendFile(myAPIToken, myCleanedRowStringUTF8, mySurveyID, myDatacenter);
         }
@@ -421,37 +406,38 @@ function generateResponses(req, res) {
 }
 
 function generateSingleRandomResponse(includeTextResponses, mySelectedTextTargetQID) {
-    
+    // console.log("generateSingleRandomResponse");
     Object.keys(myQandAs).forEach(function (k, v) {
         var myCurrentQuestionID = k;
-        // console.log("k = ", k);
-        // console.log("v = ", v);
-
         var myCurrentQuestionAnswerChoices = myQandAs[myCurrentQuestionID];
         var myNumberOfAnswerChoicesAvailableForThisQuestion = Object.keys(myCurrentQuestionAnswerChoices).length;
-
         if (myNumberOfAnswerChoicesAvailableForThisQuestion > 0) {
-            // console.log("generateSingleRandomResponse");
-            // console.log("myNumberOfAnswerChoicesAvailableForThisQuestion = ", myNumberOfAnswerChoicesAvailableForThisQuestion);
-            // console.log("myCurrentQuestionAnswerChoices = ", myCurrentQuestionAnswerChoices);
-            // console.log("myCurrentQuestionID = ", myCurrentQuestionID);
-
             var myQuestionTypeSelector = mySurveyDetails.Questions[myCurrentQuestionID]['Selector'];
             var myFirstTwo = myQuestionTypeSelector.substring(0, 2).toLowerCase();
+            // console.log("435 myFirstTwo = ", myFirstTwo);
             var myMultipleAnswerPayload = [];
             if (myFirstTwo === "ma") {
-                var myListOfAvailableAnswerChoices = myCurrentQuestionAnswerChoices;
+                // var myListOfAvailableAnswerChoices = myCurrentQuestionAnswerChoices;
+
+                console.log("myCurrentQuestionAnswerChoices = ", myCurrentQuestionAnswerChoices);
+
                 myCurrentQuestionAnswerChoices.forEach(function (a, c) {
+                    console.log("a = ", a);
+                    console.log("c = ", c);
                     myCoin = Math.round(Math.random());
                     if (myCoin === 1) {
-                        myMultipleAnswerPayload.push(c);
+                        var myFields = a.split('|');
+                        console.log("myFields = ", myFields);
+                        var myRandomAnswerValue = myFields[1];
+                        console.log("myRandomAnswerValue = ", myRandomAnswerValue);
+                        myMultipleAnswerPayload.push(myRandomAnswerValue);
                     }
                 });
+
                 var myMultipleAnswerPayloadString = myMultipleAnswerPayload.map(String);
+                console.log("myMultipleAnswerPayloadString = ", myMultipleAnswerPayloadString);
                 if (myMultipleAnswerPayloadString.length != 0) {
                     buildPostResponseDataString("mcmaQuestion", myCurrentQuestionID, '"' + myMultipleAnswerPayloadString + '"');
-                    
-                    console.log("myMultipleAnswerPayloadString = ", myMultipleAnswerPayloadString);
                 }
                 else {
                     buildPostResponseDataString("mcmaQuestion", myCurrentQuestionID, '');
@@ -460,21 +446,17 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
             } else {
                 var myRandomAnswerIndex = getRandomNumber(1, myNumberOfAnswerChoicesAvailableForThisQuestion)
                 var myRandomAnswerValueRaw = myCurrentQuestionAnswerChoices[myRandomAnswerIndex - 1];
+                // console.log("435 myRandomAnswerValueRaw = ", myRandomAnswerValueRaw);
                 myRandomAnswerValue = myRandomAnswerValueRaw.split('|').pop();
                 var myQuestionText = mySurveyDetails.Questions[myCurrentQuestionID]['QuestionText'];
-                // var myRandomAnswerDisplayText = JSON.stringify(mySurveyDetails.Questions[myCurrentQuestionID]['Choices'][myRandomAnswerValue]['Display']).replace(/\"/g, "");
-                // myObjectForTicketPayload[myQuestionText] = myRandomAnswerDisplayText;
                 myDataPayload[myQuestionText] = myRandomAnswerValue.replace("&nbsp;", " ");
-                console.log("myRandomAnswerValue = ", myRandomAnswerValue)
                 buildPostResponseDataString("mcsaQuestion", myCurrentQuestionID, myRandomAnswerValue);
             }
         };
     });
-
     // //////// if enable text comments is checked
     var myRandomTextComment = "";
     if (includeTextResponses === false) {
-        // myRowString = removeLastComma(myRowString) + "\n";
     } else {
         //////// get the question id that you want to associate text comments with
         var mySelectedTextTargetQID = mySelectedTextTargetQID;
@@ -482,21 +464,14 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
         //////// normalize selected value from 0-100 (in the normalize function)
         //////// and convert to the appropriate sentiment
 
-        // console.log("$%$%$%$% $%$%$%$ myPostResponseAnswersToSubSubmitObjectPRE[mySelectedTextTargetQID] = ", myPostResponseAnswersToSubSubmitObjectPRE[mySelectedTextTargetQID]);
-
         var myTextSentiment = normalizeTextCommentScore(myPostResponseAnswersToSubSubmitObjectPRE[mySelectedTextTargetQID], mySelectedTextTargetQID);
-
         myListofTextQuestions.forEach(function (i, j) {
             myRandomTextComment = theTextMachine(myTextSentiment);
             if (+myRandomTextComment.length > +10) {
                 buildPostResponseDataString("textInputQuestion", j, myRandomTextComment);
             } else { };
         });
-        // myRowString = removeLastComma(myRowString);
-        // };
     };
-    // console.log("myRandomTextComment = " + myRandomTextComment);
-
     //////// Create a random date for the current survey response
     var myDateRangeStart = new Date(myStartDate);
     var myDateRangeEnd = new Date(myEndDate);
@@ -505,8 +480,6 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
         myDateRangeEnd = myDateRangeStart;
     };
     var myNewRandomDate = randomDate(myDateRangeStart, myDateRangeEnd);
-    // console.log("what's this format? myNewRandomDate = ", myNewRandomDate.toISOString());
-
     date = myNewRandomDate;
     year = date.getFullYear();
     month = date.getMonth() + 1;
@@ -522,11 +495,9 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
     var myNewRandomDateString = year + '-' + month + '-' + dt;
 
     buildPostResponseDataString("startDate", "NA", myNewRandomDateString);
-    // buildPostResponseDataString("startDate", "NA", myNewRandomDateString);
 
     //remove the final comma, make JSON endpoint call if enabled, then submit csv string to server
     myRowString = removeLastComma(myRowString) + "\n";
-
 
     // var includeTicketCreation1 = $("#chkIncludeTickets1").is(':checked');
     // //////// if create tickets1 is checked
@@ -554,7 +525,6 @@ function theTextMachine(sentiment) {
         myListOfAvailableSubCommentParts = myCommentPartsLibrary[mySentimentGroupLabel];
         var myRandomIndex = Math.floor(Math.random() * myListOfAvailableSubCommentParts.length);
         if (myListOfAvailableSubCommentParts[myRandomIndex].myCommentPartContent != "Undefined") {
-            // myRandomComment += myListOfAvailableSubCommentParts[myRandomIndex].myCommentPartContent;
             myRandomComment += myListOfAvailableSubCommentParts[myRandomIndex];
             myRandomComment += " "; //adds a space between segments
         };
@@ -597,15 +567,17 @@ function buildPostResponseDataString(type, questionID, value) {
             myRowString += myRandomValue + ",";
             break;
         case "mcmaQuestion":
+            // myRandomValue = myValue;
             myRandomValue = myValue;
-            myPostResponseAnswersToSubSubmitObjectPRE[questionID] = myRandomValue;
-            myRowString += myRandomValue & ",";
+            console.log("myRandomValue = ", myRandomValue);
+            myPostResponseAnswersToSubSubmitObjectPRE[questionID] = '"' + myRandomValue + '"';
+            myRowString += myRandomValue + ",";
             break;
         case "textInputQuestion":
             myRandomValue = myValue;
             myTextQuestionID = questionID + "_TEXT";
             myPostResponseAnswersToSubSubmitObjectPRE[myTextQuestionID] = " ''' " + myRandomValue + " ''' ";
-            myRandomValue = myRandomValue.replace(/[,&#+()$%*?<>]/g, '');
+            myRandomValue = myRandomValue.replace(/[,'&#+()$%*?<>]/g, '');
             myRowString += myRandomValue + ",";
             break;
         case "startDate":
@@ -621,35 +593,27 @@ function writeCSVStringHeaders(includeTextResponses) {
     myRowString = "";
     // $.each(myMCQuestionIndex, function (k, v) {
     Object.keys(myQandAs).forEach(function (k, v) {
-        // console.log("k = ", k);
-        // console.log("v = ", v);
-
         var myQuestionText = mySurveyDetails.Questions[k]['DataExportTag'];
         myRowString += replaceNbsps(myQuestionText) + ",";
     });
-
     if (includeTextResponses === false) {
-
-     }
+    }
     else {
         if (Object.keys(myListofTextQuestions).length > 0) {
             myListofTextQuestions.forEach(function (a, b) {
                 var myQuestionText = mySurveyDetails.Questions[a]['DataExportTag'];
                 myQuestionText = myQuestionText.replace(",", " ");
-                myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
+                myQuestionText = myQuestionText.replace(/[,&#+'()$%*?<>]/g, '');
                 myRowString += replaceNbsps(myQuestionText) + ",";
             });
         };
     };
     myRowString += "StartDate \n";
-    // myRowString = removeLastComma(myRowString) + "\n";
-
-    // $.each(myMCQuestionIndex, function (k, v) {
     Object.keys(myQandAs).forEach(function (k, v) {
         var myQuestionText = mySurveyDetails.Questions[k]['QuestionDescription'];
         myQuestionText = replaceNbsps(myQuestionText);
         myQuestionText = myQuestionText.replace(",", " ");
-        myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
+        myQuestionText = myQuestionText.replace(/,&#+()$%*?<>/g, '');
         myQuestionText = myQuestionText;
         myRowString += myQuestionText + ",";
     });
@@ -671,9 +635,7 @@ function writeCSVStringHeaders(includeTextResponses) {
         };
     };
     myRowString += "StartDate \n";
-    // myRowString = removeLastComma(myRowString) + "\n";
 
-    // $.each(myMCQuestionIndex, function (k, v) {
     Object.keys(myQandAs).forEach(function (k, v) {
         var myQuestionID = mySurveyDetails.Questions[k]['QuestionID'];
         var myString3 = '\"{\"\"ImportId\"\":\""{}\"\"}\"'.format(myQuestionID);
@@ -681,7 +643,6 @@ function writeCSVStringHeaders(includeTextResponses) {
         // myRowString += myString3;
     });
 
-    // myRowString = removeLastComma(myRowString) +"\n";
     if (includeTextResponses === false) {
     }
     else {
@@ -697,22 +658,12 @@ function writeCSVStringHeaders(includeTextResponses) {
 }
 
 function normalizeTextCommentScore(rawScore, mySelectedTextTargetQID) {
-    // var mySelectedTextTargetQID = $('#selectTextCommentTargetQuestion').val();
-    
     var myOriginalQuestionIndex = myQandAs[mySelectedTextTargetQID];
-    // console.log("***myOriginalQuestionIndex = ", myOriginalQuestionIndex);
-    // console.log("***rawScore = ", rawScore);
-    // var myTotalNumberOfAnswegenerateResponses GSheetIDrChoices = Object.keys(mySurveyDetails.Questions[myOriginalQuestionIndex]['Choices']).length;
-
     var myTotalNumberOfAnswerChoices = myOriginalQuestionIndex.length;
     var mySentimentGroup;
     var myNormalizedSentimentScore = 10 * (rawScore / myTotalNumberOfAnswerChoices);
     myNormalizedSentimentScore = Math.round(myNormalizedSentimentScore);
 
-
-    // console.log("normalizeTextCommentScore myNormalizedSentimentScore = ", myNormalizedSentimentScore);
-    // console.log("normalizeTextCommentScore myPositiveThreshold = ", myPositiveThreshold);
-    // console.log("normalizeTextCommentScore myNegativeThreshold = ", myNegativeThreshold);
     if (parseInt(myNormalizedSentimentScore) >= parseInt(myPositiveThreshold)) {
         mySentimentGroup = "positive";
     } else if (myNormalizedSentimentScore <= myNegativeThreshold) {
@@ -720,13 +671,6 @@ function normalizeTextCommentScore(rawScore, mySelectedTextTargetQID) {
     } else {
         mySentimentGroup = "neutral";
     }
-
-    // console.log("normalizeTextCommentScore rawScore = " + rawScore);
-    // console.log("normalizeTextCommentScore myOriginalQuestionIndex = " + myOriginalQuestionIndex);
-    // console.log("normalizeTextCommentScore myTotalNumberOfAnswerChoices = " + myTotalNumberOfAnswerChoices);
-    // console.log("normalizeTextCommentScore mySentimentGroup = " + mySentimentGroup);
-    // console.log("normalizeTextCommentScore myNormalizedSentimentScore = " + myNormalizedSentimentScore);
-
     return mySentimentGroup;
 }
 

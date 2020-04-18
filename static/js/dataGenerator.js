@@ -607,6 +607,7 @@ function getSurveyDetails(surveyID) {
         data: myAPIKeyData,
         success: function (data) {
             parseSurveyDetailsJSON(data);
+
         },
         error: function (jqXHR, exception) {
             console.log("jqXHR AJAX onError");
@@ -614,6 +615,180 @@ function getSurveyDetails(surveyID) {
         },
         dataType: "json"
     });
+}
+
+function surveyAudit() {
+    //mySurveyDetails = myObject.body.result;
+    // console.log("parseSurveyDetailsJSON mySurveyDetails = ", JSON.stringify(mySurveyDetails));
+    var mySurveyName = mySurveyDetails.SurveyName;
+    var mySurveyQuestions2 = mySurveyDetails.Questions;
+    var mySurveyEmbeddedDataFields = generateTextListOfEmbeddedDataFields(mySurveyName, mySurveyDetails.SurveyFlow);
+    var mySurveyQuestionsList2 = [];
+    var myAuditRowString = 'SurveyName, QuestionID, QuestionType, QuestionTypeSelector, QuestionText, QuestionAnswerChoices\n';
+    $.each(mySurveyQuestions2, function (key, data) {
+        var myQuestionID2 = data.QuestionID;
+        var myQuestionType2 = data.QuestionType;
+        var myQuestionText2 = 'data.QuestionText';
+        var myQuestionDescription2 = data.QuestionDescription;
+        var myQuestionTypeSelector2 = data.Selector;
+        var myTextListOfAnswerChoices = generateTextListOfAnswerChoices(data.Choices);
+        var myMiscHTML2 = '';
+        // myQuestionIDSAndText[myQuestionID2] = myQuestionText2;
+
+        // var myQuestionAnswerChoicesList2 = createQuestionAnswerChoicesForGrid(myQuestionID2, myQuestionType2, myQuestionTypeSelector2, data.Choices);
+        var myQuestionText2Clean = $(myQuestionText2).text();
+        // myQuestionText2Clean = myQuestionText2Clean.replace(/[,&#+()$%*?<>]/g, '');
+        // console.log("myQuestionText2Clean = ", myQuestionText2Clean);
+
+        // var myQuestionAnswerChoicerOrderList = [];
+        myAuditRowString += mySurveyName + ',' + myQuestionID2 + ',' + myQuestionType2 + ',' + myQuestionTypeSelector2 + ',' + myQuestionDescription2 + ' ,' + myTextListOfAnswerChoices + '\n';
+        // console.log("myAuditRowString = ", myAuditRowString);
+        mySurveyQuestionsList2.push({
+            'questionID': myQuestionID2,
+            'questionType': myQuestionType2,
+            'questionTypeSelector': myQuestionTypeSelector2,
+            'questionText': myQuestionText2,
+            'questionDescription': myQuestionDescription2,
+            'questionAnswerChoices': myTextListOfAnswerChoices
+        });
+    });
+    // console.log("mySurveyEmbeddedDataFields = ", mySurveyEmbeddedDataFields);
+    myAuditRowString += mySurveyEmbeddedDataFields;
+    // console.log("myAuditRowString = ", myAuditRowString);
+    download_csv(myAuditRowString, mySurveyName);
+}
+var myEDList = [];
+
+function getObjects(obj, key, val, mySurveyName) {
+    var objects = [];
+
+    for (var i in obj) {
+        if (!obj.hasOwnProperty(i)) continue;
+        if (typeof obj[i] == 'object') {
+            objects = objects.concat(getObjects(obj[i], key, val, mySurveyName));
+        } else if (i == key && obj[key] == val) {
+            objects.push(obj);
+            var myEDFieldObject = new Object();
+            var myEDDescription = obj.EmbeddedData[0].Description;
+            var myEDType = obj.EmbeddedData[0].Type
+            var myEDFieldName = obj.EmbeddedData[0].Field
+            var myEDVariableType = obj.EmbeddedData[0].VariableType
+            myEDFieldObject.surveyName = mySurveyName;
+            myEDFieldObject.Field = myEDFieldName;
+            myEDFieldObject.Type = myEDType;
+            myEDFieldObject.VariableType = myEDVariableType;
+            myEDFieldObject.Description = myEDDescription;
+            myEDList.push(myEDFieldObject);
+        }
+    }
+    // console.log("myEDList = ", myEDList);
+    return myEDList;
+}
+
+function generateTextListOfEmbeddedDataFields(mySurveyName, myRawInput) {
+    // console.log("myRawInput.Flow = ", myRawInput.Flow);
+
+    var myObjects = getObjects(myRawInput.Flow, 'Type', 'EmbeddedData', mySurveyName);
+    // console.log("^^^ myRawInput.Flow = ", myRawInput.Flow);
+    console.log("^^^ my ED LIST = ", myObjects);
+
+    var myFLowItem = myRawInput.Flow;
+    var myEmbeddedDataIndex = getKeyByValue(myFLowItem, 'EmbeddedData');
+    var myEmbeddedData = myFLowItem[myEmbeddedDataIndex];
+    // console.log("myEmbeddedData = ", myEmbeddedData);
+    var myRowString = '';
+    Object.keys(myFLowItem).forEach(function (k, v) {
+        var myType = myFLowItem[k].Type;
+        if (myType === 'EmbeddedData') {
+            // console.log("myFLowItem[k] = ", myFLowItem[k].EmbeddedData);
+            Object.keys(myFLowItem[k].EmbeddedData).forEach(function (a, b) {
+                var myEDFieldName = myFLowItem[k].EmbeddedData[b].Field;
+                var myEDDescription = myFLowItem[k].EmbeddedData[b].Description;
+                var myEDType = myFLowItem[k].EmbeddedData[b].Type;
+                var myEDVariableType = myFLowItem[k].EmbeddedData[b].VariableType;
+                var myDefaultValue = myFLowItem[k].EmbeddedData[b].Value;
+                myRowString += mySurveyName + ',' + myEDFieldName + ',Custom Field, ' + myEDVariableType + ',' + myEDDescription + ',na\n'
+                // console.log("myRowString = ", myRowString);
+            });
+        }
+
+        if (myType === 'Group') {
+            // console.log("myFLowItem[k] = ", myFLowItem[k]);
+            // console.log("myFLowItem[k].Flow = ", myFLowItem[k].Flow);
+
+
+            var myObjects2 = getObjects(myFLowItem[k].Flow, 'type', 'EmbeddedData');
+            // console.log("### myRawInput.Flow = ", myRawInput.Flow);
+            // console.log("### myObjects = ", JSON.stringify(myObjects2));
+
+
+            Object.keys(myFLowItem[k].Flow).forEach(function (a, b) {
+                // console.log("myEmbeddedDataFlowItem[k].Flow[a].Type = ", myFLowItem[k].Flow[a].Type);
+                if (myFLowItem[k].Flow[a].Type === 'EmbeddedData') {
+                    // console.log("a = ", a);
+                    // console.log("b = ", b);
+                    // console.log("data field ", myFLowItem[k].Flow[a].EmbeddedData[0].Field);
+
+                    // console.log("myFLowItem[k].Flow[a] = ", myFLowItem[k].Flow[a]);
+
+                    Object.keys(myFLowItem[k].Flow[a].EmbeddedData).forEach(function (r, s) {
+
+
+                        // console.log("r = ", r);
+                        // console.log("s = ", s);
+                    });
+
+                    // console.log("a = ", a);
+                    // console.log("b = ", b);
+
+                    // console.log("myFLowItem[b].Flow ", myEmbeddedDataFlowItem[b].Flow);
+                    // var myEmbeddedDataIndex = getKeyByValue(myEmbeddedDataFlowItem[b].Flow, 'EmbeddedData');
+                    // console.log("myEmbeddedDataIndex ", myEmbeddedDataIndex);
+                    // var myEmbeddedData = myFLowItem[myEmbeddedDataIndex];
+
+
+                    var myEDFieldName = myFLowItem[k].Flow[a].EmbeddedData[0].Field;
+                    var myEDDescription = myFLowItem[k].Flow[a].EmbeddedData[0].Description;
+                    var myEDType = myFLowItem[k].Flow[a].EmbeddedData[0].Type;
+                    var myEDVariableType = myFLowItem[k].Flow[a].EmbeddedData[0].VariableType;
+                    // var myDefaultValue = myFLowItem[a].EmbeddedData[b].Value;
+                    // myRowString += mySurveyName + ',' + myEDFieldName + ',Custom Field, ' + myEDVariableType + ',' + myEDDescription + ',na\n'
+                    // console.log("myRowString = ", myRowString);
+                };
+            });
+        }
+    });
+    var myCSV = Papa.unparse(myObjects, [{ header: false }]);
+    // console.log("^^^ my ED LIST = ", myObjects);
+    // console.log("myRowString = ", myCSV);
+
+    return myCSV
+}
+
+function generateTextListOfAnswerChoices(myRawChoices) {
+    // console.log("myRawChoices = ", myRawChoices);
+    var myAnswerChoiceString = '';
+
+    if (typeof myRawChoices !== 'undefined') {
+        Object.keys(myRawChoices).forEach(function (k, v) {
+            // console.log("k = ", k);
+            // console.log("v = ", v);
+            // console.log("Display = ", myRawChoices[k].Display);
+            // console.log("myRawChoices[k].length = ", Object.keys(myRawChoices).length);
+            myAnswerChoiceString += myRawChoices[k].Display + ' | ';
+            console.log("myAnswerChoiceString = ", myAnswerChoiceString);
+            // .replace(/[,&#+()$%*?<>]/g, '')
+        });
+    } else {
+        myAnswerChoiceString += ' na | ';
+    }
+
+    myAnswerChoiceString = removeLastPipe(myAnswerChoiceString);
+    return myAnswerChoiceString;
+}
+
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
 }
 
 //////// parses raw survey data from API and calls another function to render the data on page
@@ -716,9 +891,11 @@ function createQuestionAnswerChoicesForGrid(QuestionID, QuestionType, QuestionTy
             var myAnswerChoiceOBJECTForThisQuestion = [];
             $.each(myRawAnswerChoices, function (a, c) {
                 _currentValue = a;
-                _currentDisplayValue = JSON.stringify(c['Display']).replace(/\"/g, "");
+                _currentDisplayValue = JSON.stringify(c['Display']).replace(/[,'&#+()$%*?<>]/g, '');
+                // console.log("_currentDisplayValue = ", _currentDisplayValue);
                 // var myQIDandAnswerValue = myQuestionID + "|" + _currentValue + "|" + _currentDisplayValue;
                 var myQIDandAnswerValue = myQuestionID + "|" + _currentValue;
+                // console.log("myQIDandAnswerValue = ", myQIDandAnswerValue);
                 myAnswersHTMLDisplayString += '<input type="checkbox" checked="true" class="cssRadioButtonOptionLabel radioButton" name="grp{}" id="{}" acUIC="{}" value="{}">{}</input>&nbsp;&nbsp;'.format(myQuestionID, myQuestionID, myQIDandAnswerValue, _currentValue, _currentDisplayValue);
             });
             myAnswerChoicesOBJECTForThisQuestion.id = myQuestionID;
@@ -733,7 +910,7 @@ function createQuestionAnswerChoicesForGrid(QuestionID, QuestionType, QuestionTy
             var myAnswerChoiceOBJECTForThisQuestion = [];
             $.each(myRawAnswerChoices, function (a, c) {
                 _currentValue = a;
-                _currentDisplayValue = JSON.stringify(c['Display']).replace(/\"/g, "");
+                _currentDisplayValue = JSON.stringify(c['Display']).replace(/[,'&#+()$%*?<>]/g, '');
                 var myQIDandAnswerValue = myQuestionID + "|" + _currentValue + "|" + _currentDisplayValue;
                 myAnswersHTMLDisplayString += '<input type="checkbox" checked="true" class="cssRadioButtonOptionLabel radioButton" name="grp{}" id="{}" value="{}">{}</input>&nbsp;&nbsp;'.format(myQuestionID, myQuestionID, _currentValue, _currentDisplayValue);
             });
@@ -803,45 +980,45 @@ function toggleClickedOn(data, toggleToState) {
 }
 
 //////// function that builds the data payload being sent to the qAPI
-function buildPostResponseDataString(type, questionID, value) {
-    let myValue = value;
-    switch (type) {
-        case "mcsaQuestion":
-            myRandomValue = parseInt(myValue);
-            myPostResponseAnswersToSubSubmitObjectPRE[questionID] = myRandomValue;
-            myRowString += myRandomValue + ",";
-            break;
-        case "mcmaQuestion":
-            myRandomValue = myValue;
-            myPostResponseAnswersToSubSubmitObjectPRE[questionID] = myRandomValue;
-            myRowString += myRandomValue + ",";
-            break;
-        case "textInputQuestion":
-            myRandomValue = myValue;
-            myTextQuestionID = questionID + "_TEXT";
-            myPostResponseAnswersToSubSubmitObjectPRE[myTextQuestionID] = " ''' " + myRandomValue + " ''' ";
-            myRandomValue = myRandomValue.replace(/[,&#+()$%*?<>]/g, '');
-            myRowString += myRandomValue + ",";
-            // console.log("buildPostResponseString myRandomValue = " + myRandomValue)
-            break;
-        case "startDate":
-            myRandomValue = myValue;
-            myPostResponseAnswersToSubSubmitObjectPRE['startDate'] = myRandomValue;
-            myPostResponseAnswersToSubSubmitObjectPRE['endDate'] = myRandomValue;
-            var myFormattedDate = myRandomValue.toString("yyyy-MM-dd");
-            var myNewRandomDate = new Date(myRandomValue);
-            myRowString += myFormattedDate + ",";
-            break;
-        // case "endDate": //end date
-        //     myRandomValue = myValue;
-        //     myPostResponseAnswersToSubSubmitObjectPRE['endDate'] = myRandomValue;
-        //     myRowString += myRandomValue + ",";
-        //     break;
-        // case "recordedDate":
-        //     myPostResponseAnswersToSubSubmitObjectPRE['_recordedDate'] = myValue;
-        //     break;
-    }
-}
+// function buildPostResponseDataString(type, questionID, value) {
+//     let myValue = value;
+//     switch (type) {
+//         case "mcsaQuestion":
+//             myRandomValue = parseInt(myValue);
+//             myPostResponseAnswersToSubSubmitObjectPRE[questionID] = myRandomValue;
+//             myRowString += myRandomValue + ",";
+//             break;
+//         case "mcmaQuestion":
+//             myRandomValue = myValue;
+//             myPostResponseAnswersToSubSubmitObjectPRE[questionID] = myRandomValue;
+//             myRowString += myRandomValue + ",";
+//             break;
+//         case "textInputQuestion":
+//             myRandomValue = myValue;
+//             myTextQuestionID = questionID + "_TEXT";
+//             myPostResponseAnswersToSubSubmitObjectPRE[myTextQuestionID] = " ''' " + myRandomValue + " ''' ";
+//             myRandomValue = myRandomValue.replace(/[,&'#+()$%*?<>]/g, '');
+//             myRowString += myRandomValue + ",";
+//             // console.log("buildPostResponseString myRandomValue = " + myRandomValue)
+//             break;
+//         case "startDate":
+//             myRandomValue = myValue;
+//             myPostResponseAnswersToSubSubmitObjectPRE['startDate'] = myRandomValue;
+//             myPostResponseAnswersToSubSubmitObjectPRE['endDate'] = myRandomValue;
+//             var myFormattedDate = myRandomValue.toString("yyyy-MM-dd");
+//             var myNewRandomDate = new Date(myRandomValue);
+//             myRowString += myFormattedDate + ",";
+//             break;
+//         // case "endDate": //end date
+//         //     myRandomValue = myValue;
+//         //     myPostResponseAnswersToSubSubmitObjectPRE['endDate'] = myRandomValue;
+//         //     myRowString += myRandomValue + ",";
+//         //     break;
+//         // case "recordedDate":
+//         //     myPostResponseAnswersToSubSubmitObjectPRE['_recordedDate'] = myValue;
+//         //     break;
+//     }
+// }
 
 //////// makes sure that the number of responses and text comment target have been selected
 function preProcessInputCheck() {
@@ -1524,11 +1701,11 @@ function replaceNbsps(str) {
     return str.replace(re, " ");
 }
 
-function download_csv() {
+function download_csv(csvString, fileName) {
     var hiddenElement = document.createElement('a');
-    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(myNewCSVString);
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvString);
     hiddenElement.target = '_blank';
-    hiddenElement.download = '_UploadThisFile_{}.csv'.format(mySelectedFileName);
+    hiddenElement.download = '_SurveyAudit_{}.csv'.format(fileName);
     hiddenElement.click();
 }
 
@@ -1631,6 +1808,12 @@ function loadFile(path) {
 
 function removeLastComma(strng) {
     var n = strng.lastIndexOf(",");
+    var a = strng.substring(0, n)
+    return a;
+}
+
+function removeLastPipe(strng) {
+    var n = strng.lastIndexOf("|");
     var a = strng.substring(0, n)
     return a;
 }
@@ -1799,6 +1982,12 @@ function loadStringReplacementFunction() {
 }
 
 function loadMyGlobalEventHandlers() {
+
+
+    $('#btnGenerateSurveyAudit').click(function () {
+        surveyAudit(mySelectedSurveyID);
+    });
+
     $('#btnSaveQSAT').click(function () {
         saveQSAT();
     });
@@ -1837,7 +2026,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("<br/>user info saved to local storage");
     });
 
     $("#txtDatacenter").keyup(function () {
@@ -1846,7 +2034,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("<br/>user info saved to local storage");
     });
 
     $("#txtStartDate").keyup(function () {
@@ -1855,7 +2042,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("<br/>start date saved to local storage");
     });
 
     $("#txtEndDate").keyup(function () {
@@ -1864,7 +2050,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("<br/>end date saved to local storage");
     });
 
     $("#txtNumberOfResponses").keyup(function () {
@@ -1897,7 +2082,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("ticket percentage saved 2 to local storage");
     });
 
     $("#btnStartTurboMode").click(function (event) {
@@ -1955,9 +2139,7 @@ function loadMyGlobalEventHandlers() {
 
     $("#btnSaveUserInfo").click(function (event) {
         saveUserInfoToLocalStorage();
-
         var myNumberOfEnjoyHintObjects = $('[class^="introjs"]').length;
-        console.log("myNumberOfEnjoyHintObjects = " + myNumberOfEnjoyHintObjects)
         if (myNumberOfEnjoyHintObjects <= 0) {
             document.location.reload();
         }
@@ -1984,7 +2166,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("JSON endpoint 1 URL saved to local storage");
     });
 
     $("#txtJSONURL2").keyup(function () {
@@ -1993,7 +2174,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("JSON endpoint 2 URL saved to local storage");
     });
 
     $("#txtNumberOfTurboCycles").keyup(function () {
@@ -2002,7 +2182,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("# of turbo cycles saved to local storage");
     });
 
     $("#txtSecondsBetweenTurboCycles").keyup(function () {
@@ -2011,7 +2190,6 @@ function loadMyGlobalEventHandlers() {
         //
     }).blur(function () {
         saveUserInfoToLocalStorage();
-        console.log("interval for turbo cycles saved to local storage");
     });
 }
 //Everyone is great!
