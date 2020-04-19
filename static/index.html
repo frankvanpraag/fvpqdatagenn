@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
     <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -34,21 +35,23 @@
     <script src="/js/multithread.js" type="text/javascript"></script>
     <script src="/js/localStorageDB.js" type="text/javascript"></script>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <link type="text/css" rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
     <script src="/js/dataGenerator.js" type="text/javascript"></script>
     <script src="/js/date.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js"></script>
-    
 
-    <link type="text/css" rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+    <link type="text/css" rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.css" />
 
 
 
@@ -61,7 +64,7 @@
 <body>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WP7F48V" height="0" width="0"
-                style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
 
@@ -74,10 +77,12 @@
                     <br />
                     <span id="tourStop001">
                         Your API Token: <span class="apiTokenContainer">
-                            <span class="apiTokenMask"><input type="text" id="txtAPIToken" class="textInputAPITokenInput"></span>
+                            <span class="apiTokenMask"><input type="text" id="txtAPIToken"
+                                    class="textInputAPITokenInput"></span>
                         </span></input>
                         <button id="btnToggleAPITokenVisibility">show</button>
-                        Your Datacenter: <input type="text" id="txtDatacenter" class="textInputDatacenter"></input><br />
+                        Your Datacenter: <input type="text" id="txtDatacenter"
+                            class="textInputDatacenter"></input><br />
                         <button id="btnSaveUserInfo">&#x2713;</button></span>&nbsp;&nbsp;&nbsp;
                     &nbsp;&nbsp;&nbsp;&nbsp; <button id="btnStartTutorial">Tutorial</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -129,10 +134,6 @@
 
             </td>
         </tr>
-        <td colspan="2">
-            <div id="divUserControlPanel5" class="divUserControlPanel">
-                <button id="btnGenerateSurveyAudit" class="tourStop009">Generate Survey Audit File</button>
-            </td>
 
         <tr>
             <td colspan="2">
@@ -149,7 +150,7 @@
                     <br /><br />
                     <span id="tourStop005">
                         # of Responses to Generate: <input type="text" id="txtNumberOfResponses" value="1"
-                               class="textInputSmall"></input></span>&nbsp;
+                            class="textInputSmall"></input></span>&nbsp;
                     <button id="btnGenerateResponses" class="tourStop009">Generate Responses</button>
                 </div>
             </td>
@@ -157,17 +158,17 @@
         <tr>
             <td colspan="2">
                 <div id="divUserControlPanel4" class="divUserControlPanel">
-                Template name:
-                <br /><input type="text" id="txtQSATName" class="textInputMedium"></input>
-                <p />
-                <button id="btnSaveQSAT">Save as Template</button>
-                <p/>
-                 Templates for this survey:
-                 <br /><select name="selectQSAT" id="selectQSAT" class="mediumDropdown">
-                 </select>
-                 <p />
-                 <button id="btnApplyQSAT">Apply Template</button>&nbsp;&nbsp;
-                 <button id="btnDeleteQSAT">Delete </button>
+                    Template name:
+                    <br /><input type="text" id="txtQSATName" class="textInputMedium"></input>
+                    <p />
+                    <button id="btnSaveQSAT">Save as Template</button>
+                    <p />
+                    Templates for this survey:
+                    <br /><select name="selectQSAT" id="selectQSAT" class="mediumDropdown">
+                    </select>
+                    <p />
+                    <button id="btnApplyQSAT">Apply Template</button>&nbsp;&nbsp;
+                    <button id="btnDeleteQSAT">Delete </button>
                 </div>
             </td>
 
@@ -181,18 +182,18 @@
 
                     <div id="divTextCommentOptions" class="divTextCommentOptions" style="display:none;">
                         Your Google Sheet ID: <input type="text" id="txtGSheetID" class="textInputAPITokenInput"
-                               value="1gXvHT5qSdyxl_Pf0bVU2TkxZQL32TizQz_Ws2plASWM"></input>
-                        <button id="btnSaveUserTextInfo">&#x2713;</button>&nbsp;&nbsp;<a id="linkToSpreadsheet" href="http://google.com"
-                           target="top">Open
+                            value="1gXvHT5qSdyxl_Pf0bVU2TkxZQL32TizQz_Ws2plASWM"></input>
+                        <button id="btnSaveUserTextInfo">&#x2713;</button>&nbsp;&nbsp;<a id="linkToSpreadsheet"
+                            href="http://google.com" target="top">Open
                             Spreadsheet</a>
                         <br /><br />
-                        <select name="selectTextCommentLibraryList" id="selectTextCommentLibraryList" class="mediumDropdown"
-                                disabled=disabled>
+                        <select name="selectTextCommentLibraryList" id="selectTextCommentLibraryList"
+                            class="mediumDropdown" disabled=disabled>
 
                         </select><br /><br />
 
-                        <select name="selectTextCommentTargetQuestion" id="selectTextCommentTargetQuestion" class="mediumDropdown"
-                                disabled=true>
+                        <select name="selectTextCommentTargetQuestion" id="selectTextCommentTargetQuestion"
+                            class="mediumDropdown" disabled=true>
                             <option disabled selected>Select a Question to Base Sentiment On</option>
                         </select>
                     </div>
@@ -206,7 +207,8 @@
                     <input type="checkbox" id="chkIncludeTickets1" /> Create Tickets
                     <br /><br />
                     <div id="divTicketOptions" class="divTicketOptions" style="display:none;">
-                        <input type="text" id="txtTicketPercentage1" value="5" class="textInputSmall" disabled=true></input>
+                        <input type="text" id="txtTicketPercentage1" value="5" class="textInputSmall"
+                            disabled=true></input>
                         % of responses
                         <br /><br />
                         Select which question to base the ticket score on: &nbsp;&nbsp;
@@ -215,11 +217,17 @@
                         </select>
 
                         <br /><br />
-                        JSON Endpoint URL:&nbsp;&nbsp; <input type="text" id="txtJSONURL1" class="textInputAPITokenInput"
-                               disabled=true></input>
+                        JSON Endpoint URL:&nbsp;&nbsp; <input type="text" id="txtJSONURL1"
+                            class="textInputAPITokenInput" disabled=true></input>
                         <button id="btnSaveJSONEndpoint1" disabled=true>&#x2713;</button>
                     </div>
                 </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="divUserControlPanel5" class="divUserControlPanel">
+                    <button id="btnGenerateSurveyAudit" class="tourStop009">Generate Survey Audit File</button>
             </td>
         </tr>
         <tr class="trimButtons">
@@ -236,7 +244,8 @@
                     <button id="btnTrimLowerEX"> -&gt;</button> <button id="btnTrimUpperEX">&nbsp;
                         &lt;-</button>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button id="btnAddLowerEX" class="hide">&lt;-</button> <button id="btnAddUpperEX" class="hide">&nbsp;
+                    <button id="btnAddLowerEX" class="hide">&lt;-</button> <button id="btnAddUpperEX"
+                        class="hide">&nbsp;
                         -&gt;</button>
                 </div>
             </td>
