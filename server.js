@@ -419,23 +419,23 @@ function generateSingleRandomResponse(includeTextResponses, mySelectedTextTarget
             if (myFirstTwo === "ma") {
                 // var myListOfAvailableAnswerChoices = myCurrentQuestionAnswerChoices;
 
-                console.log("myCurrentQuestionAnswerChoices = ", myCurrentQuestionAnswerChoices);
+                // console.log("myCurrentQuestionAnswerChoices = ", myCurrentQuestionAnswerChoices);
 
                 myCurrentQuestionAnswerChoices.forEach(function (a, c) {
-                    console.log("a = ", a);
-                    console.log("c = ", c);
+                    // console.log("a = ", a);
+                    // console.log("c = ", c);
                     myCoin = Math.round(Math.random());
                     if (myCoin === 1) {
                         var myFields = a.split('|');
-                        console.log("myFields = ", myFields);
+                        // console.log("myFields = ", myFields);
                         var myRandomAnswerValue = myFields[1];
-                        console.log("myRandomAnswerValue = ", myRandomAnswerValue);
+                        // console.log("myRandomAnswerValue = ", myRandomAnswerValue);
                         myMultipleAnswerPayload.push(myRandomAnswerValue);
                     }
                 });
 
                 var myMultipleAnswerPayloadString = myMultipleAnswerPayload.map(String);
-                console.log("myMultipleAnswerPayloadString = ", myMultipleAnswerPayloadString);
+                // console.log("myMultipleAnswerPayloadString = ", myMultipleAnswerPayloadString);
                 if (myMultipleAnswerPayloadString.length != 0) {
                     buildPostResponseDataString("mcmaQuestion", myCurrentQuestionID, '"' + myMultipleAnswerPayloadString + '"');
                 }
@@ -594,7 +594,7 @@ function writeCSVStringHeaders(includeTextResponses) {
     // $.each(myMCQuestionIndex, function (k, v) {
     Object.keys(myQandAs).forEach(function (k, v) {
         var myQuestionText = mySurveyDetails.Questions[k]['DataExportTag'];
-        myRowString += replaceNbsps(myQuestionText) + ",";
+        myRowString += replaceNbsps(myQuestionText.trim()) + ",";
     });
     if (includeTextResponses === false) {
     }
@@ -602,7 +602,7 @@ function writeCSVStringHeaders(includeTextResponses) {
         if (Object.keys(myListofTextQuestions).length > 0) {
             myListofTextQuestions.forEach(function (a, b) {
                 var myQuestionText = mySurveyDetails.Questions[a]['DataExportTag'];
-                myQuestionText = myQuestionText.replace(",", " ");
+                // myQuestionText = myQuestionText.replace(",", '');
                 myQuestionText = myQuestionText.replace(/[,&#+'()$%*?<>]/g, '');
                 myRowString += replaceNbsps(myQuestionText) + ",";
             });
@@ -612,9 +612,9 @@ function writeCSVStringHeaders(includeTextResponses) {
     Object.keys(myQandAs).forEach(function (k, v) {
         var myQuestionText = mySurveyDetails.Questions[k]['QuestionDescription'];
         myQuestionText = replaceNbsps(myQuestionText);
-        myQuestionText = myQuestionText.replace(",", " ");
-        myQuestionText = myQuestionText.replace(/,&#+()$%*?<>/g, '');
-        myQuestionText = myQuestionText;
+        // myQuestionText = myQuestionText.replace(",", " ");
+        myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
+        myQuestionText = '"' + myQuestionText.trim() + '"';
         myRowString += myQuestionText + ",";
     });
 
@@ -627,9 +627,9 @@ function writeCSVStringHeaders(includeTextResponses) {
             myListofTextQuestions.forEach(function (t, r) {
                 var myQuestionText = mySurveyDetails.Questions[t]['QuestionDescription'];
                 myQuestionText = replaceNbsps(myQuestionText);
-                myQuestionText = myQuestionText.replace(",", " ");
+                // myQuestionText = myQuestionText.replace(",", " ");
                 myQuestionText = myQuestionText.replace(/[,&#+()$%*?<>]/g, '');
-                myQuestionText = myQuestionText;
+                myQuestionText = myQuestionText.trim();
                 myRowString += myQuestionText + ",";
             });
         };
