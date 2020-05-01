@@ -306,7 +306,7 @@ function sendFile(myAPIToken, csvString, surveyId, datacenter) {
     myOutgoingData['data'] = csvString;
     myOutgoingDataJSON = JSON.stringify(myOutgoingData);
 
-    console.log("sendFile csvString = \n", csvString);
+    // console.log("sendFile csvString = \n", csvString);
     // 
     var myOutgoingOptions = {
         url: myOutgoingQAPIurl,
@@ -569,7 +569,7 @@ function buildPostResponseDataString(type, questionID, value) {
         case "mcmaQuestion":
             // myRandomValue = myValue;
             myRandomValue = myValue;
-            console.log("myRandomValue = ", myRandomValue);
+            // console.log("myRandomValue = ", myRandomValue);
             myPostResponseAnswersToSubSubmitObjectPRE[questionID] = '"' + myRandomValue + '"';
             myRowString += myRandomValue + ",";
             break;

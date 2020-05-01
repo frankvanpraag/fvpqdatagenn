@@ -806,7 +806,7 @@ function parseSurveyDetailsJSON(myObject) {
         myQuestionIDSAndText[myQuestionID] = myQuestionText;
         switch (myQuestionType) {
             // case "Matrix":  //Matrix Choice question type (NOT IN USE)
-            //     var myQuestionAnswerChoicesList = createQuestionAnswerChoicesForGrid(myQuestionID, myQuestionType, myQuestionTypeSelector, data.Choices);
+            //     var myQuestionAnswerChoicesList = createQuestionAnswerChoicesFor(myQuestionID, myQuestionType, myQuestionTypeSelector, data.Choices);
             //     myMCQuestionIndex[myQuestionID] = key;
             //     myAllAnswerChoices[myQuestionID] = data.Choices;
             //     var myQuestionAnswerChoicerOrderList = [];
@@ -930,7 +930,7 @@ function loadSurveyQuestionGrid(mySurveyQuestionsList) {
         paging: true,
         filtering: false,
         autoload: true,
-        pageSize: 300,
+        pageSize: 1000,
         pageButtonCount: 5,
         sorting: true,
         sorter: "string",
