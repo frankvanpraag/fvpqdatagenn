@@ -891,7 +891,8 @@ function createQuestionAnswerChoicesForGrid(QuestionID, QuestionType, QuestionTy
             var myAnswerChoiceOBJECTForThisQuestion = [];
             $.each(myRawAnswerChoices, function (a, c) {
                 _currentValue = a;
-                _currentDisplayValue = JSON.stringify(c['Display']).replace(/[,'&#+()$%*?<>]/g, '');
+                // _currentDisplayValue = JSON.stringify(c['Display']).replace(/[,'&#+()$%*?<>]/g, '');
+                _currentDisplayValue = c['Display'].replace(/[,'&#+()$%*?<>]/g, '');
                 // console.log("_currentDisplayValue = ", _currentDisplayValue);
                 // var myQIDandAnswerValue = myQuestionID + "|" + _currentValue + "|" + _currentDisplayValue;
                 var myQIDandAnswerValue = myQuestionID + "|" + _currentValue;
