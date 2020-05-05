@@ -285,14 +285,16 @@ async function authGoogle() {
 
 router.route('/beginGenerateResponses')
     .post(function (req, res, next) {
-        console.log("beginGenerateResponses");  // Added by FvP
+        console.log("YEP - beginGenerateResponses");  // Added by FvP
         generateResponses(req, function (err, csv) {
             if (error) {
-                console.log("ERROR");
+                console.log("YEP - ERROR calling generateResponses");
             } else {
+                console.log("YEP - All good. Called generateResponses");
                 res.setHeader('Content-disposition', 'attachment; filename=data.csv');
                 res.set('Content-Type', 'text/csv');
                 res.status(200).send("myCSVstring");
+                console.log("YEP - All good. Done with beginGenerateResponses");
             }
         });
     })
