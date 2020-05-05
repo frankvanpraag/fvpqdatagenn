@@ -306,7 +306,7 @@ function sendFile(myAPIToken, csvString, surveyId, datacenter) {
     myOutgoingData['data'] = csvString;
     myOutgoingDataJSON = JSON.stringify(myOutgoingData);
 
-    // console.log("sendFile csvString = \n", csvString);
+    console.log("sendFile csvString = \n", csvString);
     // 
     var myOutgoingOptions = {
         url: myOutgoingQAPIurl,
