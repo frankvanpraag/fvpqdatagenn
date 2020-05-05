@@ -285,7 +285,7 @@ async function authGoogle() {
 
 router.route('/beginGenerateResponses')
     .post(function (req, res, next) {
-        // console.log("beginGenerateResponses");
+        console.log("beginGenerateResponses");  // Added by FvP
         generateResponses(req, function (err, csv) {
             if (error) {
                 console.log("ERROR");
