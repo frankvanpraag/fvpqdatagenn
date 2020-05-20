@@ -114,29 +114,29 @@ app.listen(PORT, () => {
     console.log(`Our app is running on port ${PORT}`);
 });
 
-router.route('/abnLookup')
-    .get(function (req, res) {
-        console.log("abnLookup starting");
-        https.get('https://abr.business.gov.au/json/AbnDetails.aspx?abn=74172177893&maxResults=10&callback=callback&guid=87ebf320-501c-4607-87b5-30aa07330e01', (resp) => {
-            let data = '';
+app.get('/AbnDetails', (req, res) => {
+  console.log(new Date().toString()+': app.get /abn');
+  https.get('https://abr.business.gov.au/json/AbnDetails.aspx?abn=74172177893&maxResults=10&callback=callback&guid=87ebf320-501c-4607-87b5-30aa07330e01', (resp) => {
+    let data = '';
 
-            // A chunk of data has been recieved.
-            resp.on('data', (chunk) => {
-              data += chunk;
-            });
+    // A chunk of data has been recieved.
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
 
-            // The whole response has been received. Print out the result.
-            resp.on('end', () => {
-              let abnData = data.substring(9,data.length-1);
-              console.log(JSON.parse(abnData));
-              res.end(abnData);
-            });
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      let abnData = data.substring(9,data.length-1);
+      console.log(JSON.parse(abnData));
+      res.end(abnData);
+    });
 
-      }).on("error", (err) => {
-        console.log("Error: " + err.message);
-        res.end('{ "message": "Something went wrong..." }');
-      });
-    })
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
+    res.end('{ "message": "Something went wrong..." }');
+  });
+})
+
 
 router.route('/surveys')
     .get(function (req, res, next) {
