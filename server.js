@@ -115,8 +115,8 @@ app.listen(PORT, () => {
 });
 
 app.get('/AbnDetails', (req, res) => {
-  console.log(new Date().toString()+': app.get /abn');
-  https.get('https://abr.business.gov.au/json/AbnDetails.aspx?abn=74172177893&maxResults=10&callback=callback&guid=87ebf320-501c-4607-87b5-30aa07330e01', (resp) => {
+  console.log(new Date().toString()+': app.get /AbnDetails');
+  https.get('https://abr.business.gov.au/json/AbnDetails.aspx?abn='+req.query.abn+'&maxResults=10&callback=callback&guid=87ebf320-501c-4607-87b5-30aa07330e01', (resp) => {
     let data = '';
 
     // A chunk of data has been recieved.
